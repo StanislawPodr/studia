@@ -5,6 +5,7 @@ public class Tablice {
     public final int[][] tablica10x20 = new int[10][20];
     public final int[][] tabliceJednowymiarowe10 = new int[2][10];
     public final int[][] losowaTablica = new int[10][];
+    public final int[][] macierzRelacji = new int[5][5];
     private Random rand = new Random();
 
     public Tablice() {
@@ -19,7 +20,13 @@ public class Tablice {
             int [] kolumnyLosowejTablicy = new int [rand.nextInt(10) + 1];
             randTab10(kolumnyLosowejTablicy, rand);
             losowaTablica[i] = kolumnyLosowejTablicy;
-        }   
+        } 
+        
+        for(int [] i : macierzRelacji) {
+            for(int j = 0; j<i.length; j++) {
+                i[j] = rand.nextInt(2);
+            }
+        }
     }
 
     public void sortLosowaTablica() {
@@ -96,4 +103,6 @@ public class Tablice {
         }
         return ile;
     }
+
+
 }
