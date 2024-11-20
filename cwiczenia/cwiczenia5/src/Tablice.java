@@ -82,6 +82,14 @@ public class Tablice {
         for (int[] i : temptab) {
             bubbleSort(i);
         }
+
+        for (int i = 0; i < 10; i++) {
+            // transpozycja tej macierzy
+            for (int j = 0; j < 20; j++) {
+                tablica10x20[i][j] = temptab[j][i];
+            }
+        }
+            
     }
 
     public int sprawdzPodzielnoscPrzez3WartosciDlaTablicLosowych() {

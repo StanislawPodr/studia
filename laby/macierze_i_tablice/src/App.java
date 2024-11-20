@@ -18,12 +18,12 @@ public class App {
 
         // tab.naOdwrot();
 
-        int [][] m = {{3, 1}, {2, 1}, {1, 0}};
+        int [][] m = {{1, 2, 3}, {4, 5, 6}};
         Macierz macierz = new Macierz(m);
-        int [][] m2 = {{1, 0}, {-1, 3}, {0, 0}};
+        int [][] m2 = {{1, 2, 3, 4}, {5, 6, 7, 8}, {9, 10, 11, 12}};
         Macierz macierz2 = new Macierz(m2);
-        //macierz.multiply(macierz2).show();
-        Macierz macierz3 = macierz.dodaj(macierz2).dodaj(macierz);
-        macierz3.show();
+        macierz.multiply(macierz2).show();
+        // Macierz macierz3 = macierz.dodaj(macierz2).dodaj(macierz);
+        //macierz3.show();
     }
 }
