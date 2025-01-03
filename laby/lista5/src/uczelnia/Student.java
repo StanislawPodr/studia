@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Student extends Osoba {
-    public Student(String imie, String nazwisko, String pesel, int wiek, boolean czyMezczyzna, int nrIndeksu,
+    public Student(String imie, String nazwisko, String pesel, int wiek, String plec, int nrIndeksu,
             int rokStudiow, List<Kursy> listaKursow, boolean erasmus, boolean inzynier, boolean magister,
             boolean studiujeStacjonarnie, boolean studiujeNieStacjonarnie) {
-        super(imie, nazwisko, pesel, wiek, czyMezczyzna);
+        super(imie, nazwisko, pesel, wiek, plec);
         this.nrIndeksu = nrIndeksu;
         this.rokStudiow = rokStudiow;
         this.listaKursow = listaKursow;

@@ -1,9 +1,10 @@
 package uczelnia;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Kursy {
+public class Kursy implements Serializable {
     public Kursy(String nazwaKursu, String prowadzacy, int punktyEcts) {
         this.nazwaKursu = nazwaKursu;
         this.prowadzacy = prowadzacy;
@@ -42,6 +43,10 @@ public class Kursy {
             }
         }
         return wyszukano;
+    }
+
+    public void show() {
+        System.out.print(nazwaKursu + "; ");
     }
 
     public String getNazwaKursu() {

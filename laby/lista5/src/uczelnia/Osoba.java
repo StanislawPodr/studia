@@ -1,21 +1,22 @@
 package uczelnia;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class Osoba {
+public class Osoba implements Serializable{
     private String imie;
     private String nazwisko;
     private String pesel;
     private int wiek;
-    private boolean czyMezczyzna;
+    private String plec;
 
-    protected Osoba(String imie, String nazwisko, String pesel, int wiek, boolean czyMezczyzna) {
+    public Osoba(String imie, String nazwisko, String pesel, int wiek, String plec) {
         this.imie = imie;
         this.nazwisko = nazwisko;
         this.pesel = pesel;
         this.wiek = wiek;
-        this.czyMezczyzna = czyMezczyzna;
+        this.plec = plec;
     }
 
     public static List<Osoba> searchByImie(List<Osoba> listaOsob, String imie) {
@@ -36,6 +37,10 @@ public abstract class Osoba {
             }
         }
         return wyszukano;
+    }
+
+    public void show() {
+        System.out.println(imie + " " + nazwisko);
     }
 
 
@@ -71,11 +76,11 @@ public abstract class Osoba {
         this.wiek = wiek;
     }
 
-    public boolean isCzyMezczyzna() {
-        return czyMezczyzna;
+    public String getPlec() {
+        return plec;
     }
 
-    public void setCzyMezczyzna(boolean czyMezczyzna) {
-        this.czyMezczyzna = czyMezczyzna;
+    public void setPlec(String plec) {
+        this.plec = plec;
     }
 }

@@ -3,7 +3,7 @@ package uczelnia;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class Pracownik extends Osoba {
+public class Pracownik extends Osoba {
     private String stanowisko;
     private int stazPracy;
     private int pensja;
@@ -62,9 +62,9 @@ public abstract class Pracownik extends Osoba {
         this.pensja = pensja;
     }
 
-    protected Pracownik(String imie, String nazwisko, String pesel, int wiek, boolean czyMezczyzna, String stanowisko,
+    public Pracownik(String imie, String nazwisko, String pesel, int wiek, String plec, String stanowisko,
             int stazPracy, int pensja) {
-        super(imie, nazwisko, pesel, wiek, czyMezczyzna);
+        super(imie, nazwisko, pesel, wiek, plec);
         this.stanowisko = stanowisko;
         this.stazPracy = stazPracy;
         this.pensja = pensja;
