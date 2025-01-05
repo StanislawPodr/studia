@@ -2,6 +2,7 @@ package uczelnia;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public class Kursy implements Serializable {
@@ -14,6 +15,23 @@ public class Kursy implements Serializable {
     private String nazwaKursu;
     private String prowadzacy;
     private int punktyEcts;
+
+    static void removeByNazwaKursu(List<Kursy> kursy, String nazwa) {
+        kursy.removeIf(kurs -> kurs.getNazwaKursu().equals(nazwa));
+    }
+
+    static void removeByNazwisko(List<Kursy> kursy, String nazwisko) {
+        kursy.removeIf(kurs -> kurs.getProwadzacy().equals(nazwisko));
+    }
+
+    static void removeByEcts(List<Kursy> kursy, int punkty) {
+        kursy.removeIf(kurs -> kurs.getPunktyEcts() == punkty);
+    }
+
+    public static void sortKursy(List<Kursy> kursy) {
+        Comparator<Kursy> kursyByNazwaImieIPunktyEcts = Comparator.comparingInt(Kursy::getPunktyEcts).thenComparing(Kursy::getProwadzacy);
+        kursy.sort(kursyByNazwaImieIPunktyEcts);
+    }
 
      public static List<Kursy> searchByNazwaKursu(List<Kursy> listaKursow, String nazwaKursu) {
         List<Kursy> wyszukano = new ArrayList<>();

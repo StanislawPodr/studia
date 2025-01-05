@@ -27,6 +27,15 @@ public class Student extends Osoba {
     private boolean studiujeStacjonarnie;
     private boolean studiujeNieStacjonarnie;
 
+    static void removeByNrIndeksu(List<Student> osoby, int nrIndeksu) {
+        osoby.removeIf(osoba -> osoba.getNrIndeksu() == nrIndeksu);
+    }
+
+    static void removeByRokStudiow(List<Student> osoby, int rok) {
+        osoby.removeIf(osoba -> osoba.getRokStudiow() == rok);
+    }
+
+
     public static List<Osoba> searchByNrIndeksu(List<Student> listaStudentow, int nrIndeksu) {
         List<Osoba> wyszukano = new ArrayList<>();
         for (Student osoba : listaStudentow) {

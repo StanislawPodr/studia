@@ -8,6 +8,14 @@ public class Pracownik extends Osoba {
     private int stazPracy;
     private int pensja;
 
+    static void removeByStaz(List<Pracownik> osoby, int staz) {
+        osoby.removeIf(osoba -> osoba.getStazPracy() == staz);
+    }
+
+    static void removeByStanowisko(List<Osoba> osoby, String stanowisko) {
+        osoby.removeIf(osoba -> osoba.getImie().equals(stanowisko));
+    }
+
     public static List<Osoba> searchByStanowisko(List<Pracownik> listaPracownikow, String stanowisko) {
         List<Osoba> wyszukano = new ArrayList<>();
         for (Pracownik osoba : listaPracownikow) {

@@ -2,6 +2,7 @@ package uczelnia;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public class Osoba implements Serializable{
@@ -17,6 +18,39 @@ public class Osoba implements Serializable{
         this.pesel = pesel;
         this.wiek = wiek;
         this.plec = plec;
+    }
+
+    public static <T> List<T> getType(List<Osoba> list, Class<T> typZmiennejOczekiwany) {
+        List<T> osoby = new ArrayList<>();
+        for(Osoba i : list) {
+            if(typZmiennejOczekiwany.isInstance(i)) {
+                osoby.add(typZmiennejOczekiwany.cast(i));
+            }
+        }
+        return osoby;
+    }
+
+    static void removeByImie(List<Osoba> osoby, String imie) {
+        osoby.removeIf(osoba -> osoba.getImie().equals(imie));
+    }
+
+    static void removeByNazwisko(List<Osoba> osoby, String nazwisko) {
+        osoby.removeIf(osoba -> osoba.getNazwisko().equals(nazwisko));
+    }
+
+    public static void sortByNazwisko(List<Osoba> osoby)  {
+        Comparator<Osoba> byNazwisko = Comparator.comparing(Osoba::getNazwisko);
+        osoby.sort(byNazwisko);
+    }
+
+    public static void sortByNazwiskoIImie(List<Osoba> osoby)  {
+        Comparator<Osoba> byNazwiskoIImie = Comparator.comparing(Osoba::getNazwisko).thenComparing(Osoba::getImie);
+        osoby.sort(byNazwiskoIImie);
+    }
+
+    public static void sortByNazwiskoIWiek(List<Osoba> osoby)  {
+        Comparator<Osoba> byNazwiskoIWiek = Comparator.comparing(Osoba::getNazwisko).thenComparing(Comparator.comparingInt(Osoba::getWiek).reversed());
+        osoby.sort(byNazwiskoIWiek);
     }
 
     public static List<Osoba> searchByImie(List<Osoba> listaOsob, String imie) {

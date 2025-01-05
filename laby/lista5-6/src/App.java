@@ -36,12 +36,14 @@ public class App {
         return new Osoba(imie, nazwisko, pesel, wiek, plec);
     }
 
-    public static void showType(List<Osoba> list, Class<Osoba> typZmiennejOczekiwany) {
+    public static <T> List<T> showType(List<Osoba> list, Class<T> typZmiennejOczekiwany) {
+        List<T> osoby = new ArrayList<>();
         for(Osoba i : list) {
             if(typZmiennejOczekiwany.isInstance(i)) {
-                System.out.println(i);
+                osoby.add(typZmiennejOczekiwany.cast(i));
             }
         }
+        return osoby;
     }
 
     public static Pracownik defaultPracownikInput(Scanner scanner) {
@@ -198,7 +200,7 @@ public class App {
                 System.out.println("Nadgodziny jak nazwa mówi to LICZBA godzin!");
                 return;
             }
-            osoby.add(new PracownikBadawczoDydaktyczny(pracownik.getImie(), pracownik.getNazwisko(),
+            osoby.add(new PracownikAdministracyjny(pracownik.getImie(), pracownik.getNazwisko(),
                     pracownik.getPesel(),
                     pracownik.getWiek(), pracownik.getPlec(), pracownik.getStanowisko(), pracownik.getStazPracy(),
                     pracownik.getPensja(), nadgodziny));
@@ -252,6 +254,5 @@ public class App {
             }
             System.out.println();
         }
-
     }
 }
