@@ -2,18 +2,40 @@ package uczelnia;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 public class Pracownik extends Osoba {
     private String stanowisko;
     private int stazPracy;
     private int pensja;
 
-    static void removeByStaz(List<Pracownik> osoby, int staz) {
+    public static Pracownik defaultPracownikInput(Scanner scanner) {
+        Osoba osobaPracownicza = Osoba.defaultOsobaInput(scanner);
+        if(osobaPracownicza == null) return null;
+        System.out.println("Podaj stanowisko: ");
+        String stanowisko = scanner.next();
+        System.out.println("Podaj liczbę lat stażu: ");
+        String stazString = scanner.next();
+        System.out.println("Podaj pensję (PLN): ");
+        String pensjaString = scanner.next();
+        int staz, pensja;
+        try {
+            staz = Integer.parseInt(stazString);
+            pensja = Integer.parseInt(pensjaString);
+        } catch (NumberFormatException e) {
+            System.out.println("Staż i pensja to liczby!");
+            return null;
+        }
+        return new Pracownik(osobaPracownicza.getImie(), osobaPracownicza.getNazwisko(), osobaPracownicza.getPesel(),
+                osobaPracownicza.getWiek(), osobaPracownicza.getPlec(), stanowisko, staz, pensja);
+    }
+
+    public static void removeByStaz(List<Pracownik> osoby, int staz) {
         osoby.removeIf(osoba -> osoba.getStazPracy() == staz);
     }
 
-    static void removeByStanowisko(List<Osoba> osoby, String stanowisko) {
-        osoby.removeIf(osoba -> osoba.getImie().equals(stanowisko));
+    public static void removeByStanowisko(List<Pracownik> osoby, String stanowisko) {
+        osoby.removeIf(osoba -> osoba.getStanowisko().equals(stanowisko));
     }
 
     public static List<Osoba> searchByStanowisko(List<Pracownik> listaPracownikow, String stanowisko) {

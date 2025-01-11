@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Scanner;
 
 public class Osoba implements Serializable{
     private String imie;
@@ -20,6 +21,28 @@ public class Osoba implements Serializable{
         this.plec = plec;
     }
 
+     public static Osoba defaultOsobaInput(Scanner scanner) {
+        System.out.println("Podaj imię: ");
+        String imie = scanner.next();
+        System.out.println("Podaj nazwisko: ");
+        String nazwisko = scanner.next();
+        System.out.println("Podaj PESEL: ");
+        String pesel = scanner.next();
+        System.out.println("Podaj wiek: ");
+        String wiekString = scanner.next();
+        System.out.println("Podaj płeć: ");
+        String plec = scanner.next();
+        int wiek = 0;
+        try {
+            wiek = Integer.parseInt(wiekString);
+        } catch (NumberFormatException e) {
+            System.out.println("Wiek musi byc liczbą!");
+            return null;
+        }
+        return new Osoba(imie, nazwisko, pesel, wiek, plec);
+    }
+
+
     public static <T> List<T> getType(List<Osoba> list, Class<T> typZmiennejOczekiwany) {
         List<T> osoby = new ArrayList<>();
         for(Osoba i : list) {
@@ -30,11 +53,11 @@ public class Osoba implements Serializable{
         return osoby;
     }
 
-    static void removeByImie(List<Osoba> osoby, String imie) {
+    public static void removeByImie(List<Osoba> osoby, String imie) {
         osoby.removeIf(osoba -> osoba.getImie().equals(imie));
     }
 
-    static void removeByNazwisko(List<Osoba> osoby, String nazwisko) {
+    public static void removeByNazwisko(List<Osoba> osoby, String nazwisko) {
         osoby.removeIf(osoba -> osoba.getNazwisko().equals(nazwisko));
     }
 

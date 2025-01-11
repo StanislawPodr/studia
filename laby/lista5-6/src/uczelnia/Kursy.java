@@ -16,15 +16,15 @@ public class Kursy implements Serializable {
     private String prowadzacy;
     private int punktyEcts;
 
-    static void removeByNazwaKursu(List<Kursy> kursy, String nazwa) {
+    public static void removeByNazwaKursu(List<Kursy> kursy, String nazwa) {
         kursy.removeIf(kurs -> kurs.getNazwaKursu().equals(nazwa));
     }
 
-    static void removeByNazwisko(List<Kursy> kursy, String nazwisko) {
+    public static void removeByNazwisko(List<Kursy> kursy, String nazwisko) {
         kursy.removeIf(kurs -> kurs.getProwadzacy().equals(nazwisko));
     }
 
-    static void removeByEcts(List<Kursy> kursy, int punkty) {
+    public static void removeByEcts(List<Kursy> kursy, int punkty) {
         kursy.removeIf(kurs -> kurs.getPunktyEcts() == punkty);
     }
 
