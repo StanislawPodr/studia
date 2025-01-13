@@ -1,3 +1,5 @@
+package inne;
+
 import java.util.List;
 import java.util.Scanner;
 import java.io.FileInputStream;
