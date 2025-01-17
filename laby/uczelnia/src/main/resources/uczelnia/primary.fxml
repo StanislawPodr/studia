@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Button?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.text.Text?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.collections.FXCollections?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.text.Font?>
+
+
+
+
+<GridPane xmlns:fx="http://javafx.com/fxml" xmlns="http://javafx.com/javafx" alignment="CENTER" hgap="30" vgap="30">
+    <VBox GridPane.columnIndex="0" GridPane.rowIndex="0">
+      <Text text="Osoby" style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
+      <ListView fx:id="osoby" maxHeight="200"/> 
+    </VBox>
+   <VBox GridPane.columnIndex="1" GridPane.rowIndex="0">
+      <Text text="Studenci" style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
+      <ListView fx:id="studenci" maxHeight="200"/> 
+   </VBox>
+    <VBox GridPane.columnIndex="2" GridPane.rowIndex="0">
+      <Text text="Pracownicy" style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
+      <ListView fx:id="pracownicy" maxHeight="200"/> 
+    </VBox>
+    <VBox GridPane.columnIndex="3" GridPane.rowIndex="0">
+      <Text text="Kursy" style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
+      <ListView fx:id="kursy" maxHeight="200"/> 
+    </VBox>
+
+    <Button text="Szukaj / Usuń wyszukaną grupę" GridPane.columnIndex="0" GridPane.rowIndex="1" prefWidth="400" prefHeight="50" onAction="#szukaj">
+      <font>
+        <Font size="18"/>
+      </font>
+    </Button>
+    <Button text="Sortuj Osoby" onAction="#sortujOsoby" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+    <Button text="Sortuj Kursy" onAction="#sortujKursy" GridPane.columnIndex="3" GridPane.rowIndex="1"/>
+
+    <ComboBox fx:id="selectionComboBox" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+    <Button text="Dodaj" GridPane.columnIndex="1" GridPane.rowIndex="2" onAction="#dodajDoListy"/>
+</GridPane>

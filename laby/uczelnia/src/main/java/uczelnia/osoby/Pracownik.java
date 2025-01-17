@@ -1,0 +1,104 @@
+package uczelnia.osoby;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+public class Pracownik extends Osoba {
+    private String stanowisko;
+    private int stazPracy;
+    private int pensja;
+
+    public static Pracownik defaultPracownikInput(Scanner scanner) {
+        Osoba osobaPracownicza = Osoba.defaultOsobaInput(scanner);
+        if(osobaPracownicza == null) return null;
+        System.out.println("Podaj stanowisko: ");
+        String stanowisko = scanner.next();
+        System.out.println("Podaj liczbę lat stażu: ");
+        String stazString = scanner.next();
+        System.out.println("Podaj pensję (PLN): ");
+        String pensjaString = scanner.next();
+        int staz, pensja;
+        try {
+            staz = Integer.parseInt(stazString);
+            pensja = Integer.parseInt(pensjaString);
+        } catch (NumberFormatException e) {
+            System.out.println("Staż i pensja to liczby!");
+            return null;
+        }
+        return new Pracownik(osobaPracownicza.getImie(), osobaPracownicza.getNazwisko(), osobaPracownicza.getPesel(),
+                osobaPracownicza.getWiek(), osobaPracownicza.getPlec(), stanowisko, staz, pensja);
+    }
+
+    public static void removeByStaz(List<Pracownik> osoby, int staz) {
+        osoby.removeIf(osoba -> osoba.getStazPracy() == staz);
+    }
+
+    public static void removeByStanowisko(List<Pracownik> osoby, String stanowisko) {
+        osoby.removeIf(osoba -> osoba.getStanowisko().equals(stanowisko));
+    }
+
+    public static List<Osoba> searchByStanowisko(List<Pracownik> listaPracownikow, String stanowisko) {
+        List<Osoba> wyszukano = new ArrayList<>();
+        if(stanowisko == null) return wyszukano;
+        for (Pracownik osoba : listaPracownikow) {
+            if (osoba.getStanowisko().equals(stanowisko)) {
+                wyszukano.add(osoba);
+            }
+        }
+        return wyszukano;
+    }
+
+    public static List<Osoba> searchByStazPracy(List<Pracownik> listaPracownikow, int stazPracy) {
+        List<Osoba> wyszukano = new ArrayList<>();
+        for (Pracownik osoba : listaPracownikow) {
+            if (osoba.getStazPracy() == stazPracy) {
+                wyszukano.add(osoba);
+            }
+        }
+        return wyszukano;
+    }
+
+    public static List<Osoba> searchByPensja(List<Pracownik> listaPracownikow, int pensja) {
+        List<Osoba> wyszukano = new ArrayList<>();
+        for (Pracownik osoba : listaPracownikow) {
+            if (osoba.getPensja() == pensja) {
+                wyszukano.add(osoba);
+            }
+        }
+        return wyszukano;
+    }
+
+
+    public String getStanowisko() {
+        return stanowisko;
+    }
+
+    public void setStanowisko(String stanowisko) {
+        this.stanowisko = stanowisko;
+    }
+
+    public int getStazPracy() {
+        return stazPracy;
+    }
+
+    public void setStazPracy(int stazPracy) {
+        this.stazPracy = stazPracy;
+    }
+
+    public int getPensja() {
+        return pensja;
+    }
+
+    public void setPensja(int pensja) {
+        this.pensja = pensja;
+    }
+
+    public Pracownik(String imie, String nazwisko, String pesel, int wiek, String plec, String stanowisko,
+            int stazPracy, int pensja) {
+        super(imie, nazwisko, pesel, wiek, plec);
+        this.stanowisko = stanowisko;
+        this.stazPracy = stazPracy;
+        this.pensja = pensja;
+    }
+}

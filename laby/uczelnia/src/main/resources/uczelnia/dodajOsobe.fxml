@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Text?>
+
+<VBox xmlns:fx="http://javafx.com/fxml" xmlns="http://javafx.com/javafx" fx:controller="uczelnia.controllers.AddOsobaController" spacing="10" alignment="CENTER">
+    <Text text="Imie: " /> 
+    <TextField fx:id="imie" promptText="Imie"/>
+    <Text text="Nazwisko: " />
+    <TextField fx:id="nazwisko" promptText="Nazwisko"/>
+    <Text text="nr PESEL: " />
+    <TextField fx:id="pesel" promptText="PESEL"/>
+    <Text text="wiek: " />
+    <TextField fx:id="wiek" promptText="wiek"/>
+    <Text text="płeć: " />
+    <TextField fx:id="plec" promptText="płeć"/>
+    <Button text="Dalej" onAction="#dodajOsobe"/>
+</VBox>

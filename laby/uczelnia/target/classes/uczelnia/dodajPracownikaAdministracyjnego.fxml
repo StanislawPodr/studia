@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Text?>
+
+<VBox xmlns:fx="http://javafx.com/fxml" xmlns="http://javafx.com/javafx" spacing="10" alignment="CENTER">
+    <Text text="Stanowisko: " /> 
+    <TextField fx:id="stanowisko" promptText="Stanowisko"/>
+    <Text text="Staż pracy: " />
+    <TextField fx:id="staz" promptText="Staż"/>
+    <Text text="Pensja: " />
+    <TextField fx:id="pensja" promptText="Pensja"/>
+    <Text text="Liczba nadgodzin: " />
+    <TextField fx:id="nadgodziny" promptText="Nadgodziny"/>
+    <Button text="Dodaj" onAction="#dodajAdministracyjnego"/>
+</VBox>

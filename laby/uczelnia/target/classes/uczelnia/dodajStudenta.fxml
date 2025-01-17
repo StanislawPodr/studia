@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Text?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.layout.GridPane?>
+
+<VBox xmlns:fx="http://javafx.com/fxml" xmlns="http://javafx.com/javafx" spacing="10" alignment="CENTER" minWidth="300">
+    <Text text="Nr Indeksu: " /> 
+    <TextField fx:id="indeks" promptText="Numer"/>
+    <Text text="Rok studiów: " />
+    <TextField fx:id="rokStudiow" promptText="Rok"/>
+    <CheckBox fx:id="erasmus" text="Czy bierze udział w programie ERASMUS?"/>
+    <CheckBox fx:id="inzynier" text="Czy studiuje na studiach pierwszego stopnia?"/>
+    <CheckBox fx:id="magister" text="Czy studiuje na studiach drugiego stopnia?"/>
+    <CheckBox fx:id="stacjonarnie" text="Czy studiuje na studiach stacjonarnych?"/>
+    <CheckBox fx:id="nieStacjonarnie" text="Czy studiuje na studiach niestacjonarnych?"/>
+    <GridPane fx:id="gridPane" prefWidth="400" prefHeight="300">
+    </GridPane>
+    <Button text="Dodaj" onAction="#dodajStudenta"/>
+</VBox>
