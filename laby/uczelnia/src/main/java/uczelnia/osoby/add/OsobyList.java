@@ -50,9 +50,9 @@ public class OsobyList extends ArrayList<Osoba> {
         } else if (peselePracownikow.contains(osoba.getPesel())) {
             return false;
         } else if (osoba instanceof Pracownik pracownik) {
+            peselePracownikow.add(osoba.getPesel());
             listaPracownikow.add(pracownik);
         }
-        peselePracownikow.add(osoba.getPesel());
         boolean wynik = lista.add(osoba);
         App.zapisz(new ArrayList<Osoba>(lista), plik);
         return wynik;

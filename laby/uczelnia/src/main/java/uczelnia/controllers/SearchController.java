@@ -15,6 +15,8 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import uczelnia.App;
 import uczelnia.osoby.Kursy;
+import uczelnia.osoby.Obserwator;
+import uczelnia.osoby.ObserwatorusunieciaKursu;
 import uczelnia.osoby.Osoba;
 import uczelnia.osoby.Pracownik;
 import uczelnia.osoby.Student;
@@ -30,6 +32,8 @@ public class SearchController implements Initializable {
     ListView<Object> wyszukano;
 
     ObservableList<Object> wyszukanoList;
+
+    private Obserwator obserwator = new ObserwatorusunieciaKursu();
 
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
@@ -49,6 +53,7 @@ public class SearchController implements Initializable {
             } else if (o instanceof Kursy kurs) {
                 zmienionoKursy = true;
                 App.listaKursow.remove(kurs);
+                obserwator.update(kurs);
             }
         }
         if (zmienionoKursy) {
