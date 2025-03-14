@@ -1,7 +1,5 @@
 public interface Obserwowany {
-    public void dodajObserwatora(Obserwator obserwator);
-    public void usunObserwatora(int index);
-    public void notifyObserwatorzy() throws Exception;
-    public String getStan();
-    public boolean getEndOfFile();
+public void notifyObserwatorzy(String stan) throws Exception;
+public void deleteObserwator(int indeks);
+public void addObserwator(Obserwator obserwator);
 }
