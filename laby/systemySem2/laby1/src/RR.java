@@ -7,7 +7,7 @@ public class RR implements Simulated {
     private boolean simulationEnded = false;
     List<Process> processes;
     private boolean waitingForChange = false;
-    private int defaultQuantum = 5;
+    private int defaultQuantum = (int) Math.pow(5,7);
     private int quantum = defaultQuantum;
     private int index = 0;
 
@@ -44,7 +44,7 @@ public class RR implements Simulated {
                 waitingForChange = true;
                 endedProcesses.add(new EndedProcess(time + Process.iterationTime, processes.get(index)));
                 processes.remove(index);
-                if(processes.size() > 0) {
+                if(!processes.isEmpty()) {
                     index = index % processes.size();
                 } else {
                     index = 0;

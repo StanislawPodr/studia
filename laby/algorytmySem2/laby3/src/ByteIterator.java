@@ -1,5 +1,6 @@
 import java.util.Iterator;
 
+
 public class ByteIterator implements Iterator<Integer> {
 
     Iterator<Integer> numbers;
@@ -7,6 +8,9 @@ public class ByteIterator implements Iterator<Integer> {
     boolean hasNext;
 
     public ByteIterator(Iterator<Integer> numbers) {
+        if(numbers == null) {
+            throw new IllegalArgumentException();
+        }
         this.numbers = numbers;
         if (!getNextNumber()) {
             throw new IllegalArgumentException("No numbers in the Iterator");
@@ -16,7 +20,11 @@ public class ByteIterator implements Iterator<Integer> {
 
     public boolean getNextNumber() {
         if (numbers.hasNext()) {
-            number = numbers.next();
+            Integer numberInteger = numbers.next();
+            if(numberInteger == null) {
+                throw new IllegalArgumentException();
+            }
+            number = numberInteger;
             if (number < 0) {
                 throw new IllegalArgumentException("Number out of range");
             }

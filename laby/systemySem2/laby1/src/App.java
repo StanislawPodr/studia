@@ -3,7 +3,7 @@ import java.util.List;
 
 public class App {
     public static void main(String[] args) throws Exception {
-        Simulator simulator = new Simulator(List.of(new FCFS(), new SJF(), new RR()));
+        Simulator simulator = new Simulator(List.of(new FCFS(), new SJF(true), new SJF(false), new RR()));
         simulator.run();
         simulator.printResults();
         System.out.println("\n ----------------- \n");
@@ -14,7 +14,7 @@ public class App {
         for (int i = 0; i < 900; i++) {
             processes.add(new Process(i*5, 10));
         }
-        simulator = new Simulator(List.of(new FCFS(), new SJF(), new RR()), processes);
+        simulator = new Simulator(List.of(new FCFS(), new SJF(true), new SJF(false), new RR()), processes);
         simulator.run();
         simulator.printResults();
     }
