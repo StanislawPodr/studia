@@ -1,0 +1,17 @@
+# Pliki binarne i katalog build
+*.class
+*.jar
+*.war
+
+# Konfiguracja IDE
+.idea/
+*.iml
+.vscode/
+
+# Pliki systemowe
+.DS_Store
+Thumbs.db
+
+# Logi i pliki tymczasowe
+logs/
+tmp/
