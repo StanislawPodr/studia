@@ -1,4 +1,6 @@
-import java.util.LinkedList;
+import wyklad.LinkedList;
+
+import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
@@ -8,7 +10,7 @@ public class OneWaySquareList<T> implements wyklad.IList<T> {
     private int expectedSideSize;
 
     public OneWaySquareList() {
-        list = new LinkedList<LinkedList<T>>();
+        list = new LinkedList<>();
         size = 0;
         expectedSideSize = 2;
     }
@@ -19,19 +21,17 @@ public class OneWaySquareList<T> implements wyklad.IList<T> {
     public boolean add(T e) {
         size++;
         if (size == expectedSideSize * expectedSideSize) {
-            ListIterator<LinkedList<T>> it = list.listIterator();
-            List<T> current = it.next();
+            Iterator<LinkedList<T>> it = list.iterator();
+            LinkedList<T> current = it.next();
             fixForNotEnoughInRow(it, current, expectedSideSize);
-            it.previous().add(e);
+            list.getLast().add(e);
             expectedSideSize++;
         } else if ((size - 1) % (expectedSideSize - 1) != 0) {
             list.getLast().add(e);
         } else {
-            list.add(new LinkedList<T>() {
-                {
-                    add(e);
-                }
-            });
+            LinkedList<T> newList = new LinkedList<>();
+            newList.add(e);
+            list.add(newList);
         }
         return true;
     }
@@ -49,7 +49,7 @@ public class OneWaySquareList<T> implements wyklad.IList<T> {
 
         size++;
 
-        ListIterator<LinkedList<T>> it = list.listIterator();
+        Iterator<LinkedList<T>> it = list.iterator();
         int indexOfSquareHeight = index / (expectedSideSize - 1);
         int indexOfSquareWidth = index % (expectedSideSize - 1);
         LinkedList<T> indexList = it.next();
@@ -63,7 +63,7 @@ public class OneWaySquareList<T> implements wyklad.IList<T> {
             fixForTooManyInRow(it, indexList, expectedSideSize - 1);
         } else {
             ListIterator<LinkedList<T>> iteratorForFixingAfterExpand = list.listIterator();
-            List<T> first = iteratorForFixingAfterExpand.next();
+            LinkedList<T> first = iteratorForFixingAfterExpand.next();
             fixForNotEnoughInRow(iteratorForFixingAfterExpand, first, expectedSideSize);
             expectedSideSize++;
         }
@@ -77,12 +77,12 @@ public class OneWaySquareList<T> implements wyklad.IList<T> {
     }
 
     @Override
-    public boolean contains(Object element) {
+    public boolean contains(T element) {
         if (size == 0) {
             return false;
         }
 
-        ListIterator<LinkedList<T>> it = list.listIterator();
+        Iterator<LinkedList<T>> it = list.iterator();
         LinkedList<T> indexList = null;
         boolean found = false;
         while (it.hasNext() && !found) {
@@ -114,7 +114,7 @@ public class OneWaySquareList<T> implements wyklad.IList<T> {
             return -1;
         }
 
-        ListIterator<LinkedList<T>> it = list.listIterator();
+        Iterator<LinkedList<T>> it = list.iterator();
         LinkedList<T> indexList;
         int index = 0;
         boolean found = false;
@@ -142,7 +142,7 @@ public class OneWaySquareList<T> implements wyklad.IList<T> {
             throw new IndexOutOfBoundsException("Index out of bounds");
         }
 
-        ListIterator<LinkedList<T>> it = list.listIterator();
+        Iterator<LinkedList<T>> it = list.iterator();
         int indexOfSquareHeight = index / (expectedSideSize - 1);
         int indexOfSquareWidth = index % (expectedSideSize - 1);
         LinkedList<T> indexList = it.next();
@@ -159,7 +159,7 @@ public class OneWaySquareList<T> implements wyklad.IList<T> {
 
         if (size < (expectedSideSize - 1) * (expectedSideSize - 1)) {
             expectedSideSize--;
-            ListIterator<LinkedList<T>> iteratorForFixingAfterShrink = list.listIterator();
+            Iterator<LinkedList<T>> iteratorForFixingAfterShrink = list.iterator();
             List<T> first = iteratorForFixingAfterShrink.next();
             fixForTooManyInRow(iteratorForFixingAfterShrink, first, expectedSideSize - 1);
         } else {
@@ -175,7 +175,7 @@ public class OneWaySquareList<T> implements wyklad.IList<T> {
             return false;
         }
 
-        ListIterator<LinkedList<T>> it = list.listIterator();
+        Iterator<LinkedList<T>> it = list.iterator();
         LinkedList<T> indexList = null;
         boolean found = false;
         while (it.hasNext() && !found) {
@@ -190,7 +190,7 @@ public class OneWaySquareList<T> implements wyklad.IList<T> {
 
         if (size < (expectedSideSize - 1) * (expectedSideSize - 1)) {
             expectedSideSize--;
-            ListIterator<LinkedList<T>> iteratorForFixingAfterShrink = list.listIterator();
+            Iterator<LinkedList<T>> iteratorForFixingAfterShrink = list.iterator();
             List<T> first = iteratorForFixingAfterShrink.next();
             fixForTooManyInRow(iteratorForFixingAfterShrink, first, expectedSideSize - 1);
         } else {
@@ -215,8 +215,8 @@ public class OneWaySquareList<T> implements wyklad.IList<T> {
         }
     }
 
-    private void fixForTooManyInRow(ListIterator<LinkedList<T>> it, List<T> current, int maxWidth) {
-        List<T> next = current;
+    private void fixForTooManyInRow(Iterator<LinkedList<T>> it, LinkedList<T> current, int maxWidth) {
+        LinkedList<T> next = current;
         while (it.hasNext()) {
             next = it.next();
             while (current.size() > maxWidth) {
@@ -225,7 +225,7 @@ public class OneWaySquareList<T> implements wyklad.IList<T> {
             current = next;
         }
 
-        final List<T> last = current;
+        final LinkedList<T> last = current;
 
         if (current.size() > maxWidth) {
             LinkedList<T> newLastList = new LinkedList<T>();
@@ -235,8 +235,8 @@ public class OneWaySquareList<T> implements wyklad.IList<T> {
         }
     }
 
-    private void fixForNotEnoughInRow(ListIterator<LinkedList<T>> it, List<T> current, int maxWidth) {
-        List<T> next = current;
+    private void fixForNotEnoughInRow(Iterator<LinkedList<T>> it, LinkedList<T> current, int maxWidth) {
+        LinkedList<T> next;
         while (it.hasNext()) {
             next = it.next();
             while (current.size() < maxWidth && !next.isEmpty()) {
@@ -245,9 +245,9 @@ public class OneWaySquareList<T> implements wyklad.IList<T> {
             current = next;
         }
 
-        final List<T> last = current;
+        final LinkedList<T> last = current;
 
-        if (last.size() == 0) {
+        if (last.isEmpty()) {
             it.remove();
         }
 
