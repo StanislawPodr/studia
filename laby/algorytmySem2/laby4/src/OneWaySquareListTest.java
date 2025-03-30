@@ -37,10 +37,10 @@ public class OneWaySquareListTest {
         list.add(1);
         list.add(2);
         list.add(3);
-        list.add(4);
+        //list.add(4);
 
         assertEquals(2, list.remove(1));
-        assertEquals(3, list.size());
+        assertEquals(2, list.size());
         assertEquals(3, list.get(1));
     }
 

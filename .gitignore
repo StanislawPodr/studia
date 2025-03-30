@@ -2,6 +2,7 @@
 *.class
 *.jar
 *.war
+*.zip
 
 # Konfiguracja IDE
 .idea/

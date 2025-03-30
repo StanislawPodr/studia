@@ -16,34 +16,36 @@ public class App {
         list.add(null);
         list.add(null);
 
-        //list.print();
+        list.print();
 
-        // list.remove(4);
-        // list.remove(0);
-        // list.clear();
+        list.remove(4);
+        list.remove(0);
+        //list.clear();
 
-        //list.set(0, null);
+        list.set(0, null);
         list.add(5, 100);
-        //System.out.println(list.contains(null));
-        //System.out.println(list.get(5));
+        System.out.println(list.contains(null));
+        System.out.println(list.get(5));
         System.out.println(list.indexOf(100));
 
-        //list.print();
+       list.print();
 
-        System.out.println("-------------------------");
+        // System.out.println("-------------------------");
 
-        OneWaySquareList<String> list2 = new OneWaySquareList<>();
-        list2.add("a");
-        list2.add("b"); 
-        list2.add("c");
-        list2.add("d");
-        //list2.add("e");
-        //list2.add(null);
+        // OneWaySquareList<Integer> list2 = new OneWaySquareList<>();
+        // list2.add(1);
+        // list2.add(2); 
+        // list2.add(3);
+        // //list2.add("e");
+        // //list2.add(null);
 
-        list2.remove("c");
-        list2.remove(null);
+        // //list2.remove("c");
+        // //list2.remove(null);
+        // list2.remove((Integer) 2);
 
-        list2.print();
+        // //System.out.println(list2);
+
+        // list2.print();
 
 
     }

@@ -1,8 +1,6 @@
 import wyklad.LinkedList;
 
 import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
 
 public class OneWaySquareList<T> implements wyklad.IList<T> {
 
@@ -24,10 +22,10 @@ public class OneWaySquareList<T> implements wyklad.IList<T> {
             Iterator<LinkedList<T>> it = list.iterator();
             LinkedList<T> current = it.next();
             fixForNotEnoughInRow(it, current, expectedSideSize);
-            list.getLast().add(e);
+            list.getLast().get().add(e);
             expectedSideSize++;
         } else if ((size - 1) % (expectedSideSize - 1) != 0) {
-            list.getLast().add(e);
+            list.getLast().get().add(e);
         } else {
             LinkedList<T> newList = new LinkedList<>();
             newList.add(e);
@@ -62,7 +60,7 @@ public class OneWaySquareList<T> implements wyklad.IList<T> {
         if (size != expectedSideSize * expectedSideSize) {
             fixForTooManyInRow(it, indexList, expectedSideSize - 1);
         } else {
-            ListIterator<LinkedList<T>> iteratorForFixingAfterExpand = list.listIterator();
+            Iterator<LinkedList<T>> iteratorForFixingAfterExpand = list.iterator();
             LinkedList<T> first = iteratorForFixingAfterExpand.next();
             fixForNotEnoughInRow(iteratorForFixingAfterExpand, first, expectedSideSize);
             expectedSideSize++;
@@ -151,6 +149,10 @@ public class OneWaySquareList<T> implements wyklad.IList<T> {
         }
 
         T removed = indexList.remove(indexOfSquareWidth);
+        if(indexList.isEmpty()) {
+            it.remove();
+            it.next();
+        }
         size--;
 
         if (size == 0) {
@@ -160,7 +162,7 @@ public class OneWaySquareList<T> implements wyklad.IList<T> {
         if (size < (expectedSideSize - 1) * (expectedSideSize - 1)) {
             expectedSideSize--;
             Iterator<LinkedList<T>> iteratorForFixingAfterShrink = list.iterator();
-            List<T> first = iteratorForFixingAfterShrink.next();
+            LinkedList<T> first = iteratorForFixingAfterShrink.next();
             fixForTooManyInRow(iteratorForFixingAfterShrink, first, expectedSideSize - 1);
         } else {
             fixForNotEnoughInRow(it, indexList, expectedSideSize - 1);
@@ -182,6 +184,11 @@ public class OneWaySquareList<T> implements wyklad.IList<T> {
             indexList = it.next();
             found = indexList.remove(element);
         }
+
+        if(indexList.isEmpty()) {
+            it.remove();
+            it.next();
+        }
         size--;
 
         if (size == 0) {
@@ -191,7 +198,7 @@ public class OneWaySquareList<T> implements wyklad.IList<T> {
         if (size < (expectedSideSize - 1) * (expectedSideSize - 1)) {
             expectedSideSize--;
             Iterator<LinkedList<T>> iteratorForFixingAfterShrink = list.iterator();
-            List<T> first = iteratorForFixingAfterShrink.next();
+            LinkedList<T> first = iteratorForFixingAfterShrink.next();
             fixForTooManyInRow(iteratorForFixingAfterShrink, first, expectedSideSize - 1);
         } else {
             fixForNotEnoughInRow(it, indexList, expectedSideSize - 1);
@@ -219,19 +226,33 @@ public class OneWaySquareList<T> implements wyklad.IList<T> {
         LinkedList<T> next = current;
         while (it.hasNext()) {
             next = it.next();
-            while (current.size() > maxWidth) {
-                next.addFirst(current.removeLast());
+            if (current.size() > maxWidth) {
+                int index = maxWidth - 1;
+                wyklad.Node<T> lastNodeBeforeMove = current.getNode(index);
+                wyklad.Node<T> lastNodeToMove = current.getLast();
+                lastNodeToMove.setNext(next.getHead());
+                next.setHead(lastNodeBeforeMove.getNext());
+                lastNodeBeforeMove.setNext(null);
+                current.setLast(lastNodeBeforeMove);
+                int sizeChange = current.size() - maxWidth;
+                next.setSize(next.size() + sizeChange);
+                current.setSize(maxWidth);
             }
             current = next;
-        }
 
-        final LinkedList<T> last = current;
+        }
 
         if (current.size() > maxWidth) {
             LinkedList<T> newLastList = new LinkedList<T>();
-            newLastList.addAll(last.subList(maxWidth, last.size()));
-            it.add(newLastList);
-            last.subList(maxWidth, last.size()).clear();
+            int index = maxWidth - 1;
+            wyklad.Node<T> lastNodeBeforeMove = current.getNode(index);
+            newLastList.setHead(lastNodeBeforeMove.getNext());
+            lastNodeBeforeMove.setNext(null);
+            current.setLast(lastNodeBeforeMove);
+            int sizeChange = current.size() - maxWidth;
+            newLastList.setSize(sizeChange);
+            current.setSize(maxWidth);
+            list.add(newLastList);
         }
     }
 
@@ -239,15 +260,29 @@ public class OneWaySquareList<T> implements wyklad.IList<T> {
         LinkedList<T> next;
         while (it.hasNext()) {
             next = it.next();
-            while (current.size() < maxWidth && !next.isEmpty()) {
-                current.add(next.removeFirst());
+            if (current.size() < maxWidth) {
+                int index = (next.size() > maxWidth - current.size() - 1) ? (maxWidth - current.size() - 1)
+                        : next.size() - 1;
+                wyklad.Node<T> lastNodeMoved = next.getNode(index);
+                if (current.getLast() != null) {
+                    current.getLast().setNext(next.getHead());
+                } else {
+                    current.setHead(next.getHead());
+                }
+                current.setLast(lastNodeMoved);
+                next.setHead(lastNodeMoved.getNext());
+                if (next.getHead() == null) {
+                    next.setLast(null);
+                }
+                lastNodeMoved.setNext(null);
+                int sizeChange = index + 1;
+                next.setSize(next.size() - sizeChange);
+                current.setSize(current.size() + sizeChange);
             }
             current = next;
         }
 
-        final LinkedList<T> last = current;
-
-        if (last.isEmpty()) {
+        if (list.getLast().get().isEmpty()) {
             it.remove();
         }
 
