@@ -112,18 +112,31 @@ public class TwoWayLinkedList<E> implements IList<E> {
             return null;
         }
 
-        Node<E> node = tailSentinel.getPrevious();
-        int index = size - 1;
-        while (node != null && !Objects.equals(element, node.getElement())) {
-            node = node.getPrevious();
-            index--;
+        Node<E> nodeForNonEvenIndex = new Node<E>(null, null, headSentinel.getNext());
+        Node<E> nodeForEvenIndex = new Node<E>(null, null, nodeForNonEvenIndex.getNext().getPrevious());
+        int index = -2;
+        boolean foundForNonEven = false;
+        boolean foundForEven = false;
+        while (nodeForNonEvenIndex.getNext() != null && !foundForEven && !foundForNonEven) {
+            nodeForEvenIndex = nodeForEvenIndex.getNext();
+            nodeForNonEvenIndex = nodeForNonEvenIndex.getNext();
+            foundForEven = Objects.equals(element, nodeForEvenIndex.getElement());
+            if(nodeForNonEvenIndex != tailSentinel) {
+                foundForNonEven = Objects.equals(element, nodeForNonEvenIndex.getElement());
+            }
+            index += 2;
         }
 
-        if (index < 0) {
+        if (!foundForEven && !foundForNonEven) {
             return null;
         }
 
-        return new NodeWithIndex<>(node, index);
+        if (foundForEven) {
+            return new NodeWithIndex<>(nodeForEvenIndex, index);
+        } else {
+            return new NodeWithIndex<>(nodeForNonEvenIndex, index + 1);
+        }
+
     }
 
     @Override
@@ -203,7 +216,7 @@ public class TwoWayLinkedList<E> implements IList<E> {
                 throw new NoSuchElementException();
             }
             index++;
-            if(!currentIsRemoved) {
+            if (!currentIsRemoved) {
                 previous = current;
             }
             current = next;
