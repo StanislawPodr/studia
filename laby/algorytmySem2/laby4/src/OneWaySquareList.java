@@ -1,6 +1,9 @@
 import wyklad.LinkedList;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Objects;
 
 public class OneWaySquareList<T> implements wyklad.IList<T> {
 
@@ -149,7 +152,7 @@ public class OneWaySquareList<T> implements wyklad.IList<T> {
         }
 
         T removed = indexList.remove(indexOfSquareWidth);
-        if(indexList.isEmpty()) {
+        if (indexList.isEmpty()) {
             it.remove();
             it.next();
         }
@@ -185,7 +188,7 @@ public class OneWaySquareList<T> implements wyklad.IList<T> {
             found = indexList.remove(element);
         }
 
-        if(indexList.isEmpty()) {
+        if (indexList.isEmpty()) {
             it.remove();
             it.next();
         }
@@ -285,7 +288,62 @@ public class OneWaySquareList<T> implements wyklad.IList<T> {
         if (list.getLast().get().isEmpty()) {
             it.remove();
         }
+    }
 
+    public boolean isPalindrom() {
+        if (size < 2) {
+            return true;
+        }
+        int indexForSecondHalf = size / 2 + size % 2;
+        int indexForFirstHalf = indexForSecondHalf - 1 - size % 2;
+        int indexY = indexForFirstHalf / (expectedSideSize - 1);
+        int indexOfSecond = indexForSecondHalf / (expectedSideSize - 1);
+        int indexX = indexForFirstHalf % (expectedSideSize - 1);
+        List<LinkedList<T>> arrayList = new ArrayList<>(list.size());
+        for (LinkedList<T> element : list) {
+            arrayList.add(element);
+        }
+
+        List<T> compareList = new ArrayList<>(expectedSideSize - 1); // cofanie
+        wyklad.Node<T> result = arrayList.get(indexY).getHead();
+        for (int i = 0; i < indexX + 1; i++) {
+            compareList.add(result.get());
+            result = result.getNext();
+        }
+        
+        wyklad.Node<T> second = arrayList.get(indexOfSecond).getHead();
+
+        if (indexY == indexOfSecond) {
+            if(size % 2 == 1) {
+                result = result.getNext();
+            }
+            second = result;
+        }
+
+        while (indexOfSecond < arrayList.size()) {
+            if(indexX < 0) {
+                indexY--;
+                indexX = expectedSideSize - 2;
+                compareList = new ArrayList<>(expectedSideSize - 1);
+                for (T element : arrayList.get(indexY)) {
+                    compareList.add(element);
+                }
+            }
+            
+            if(!Objects.equals(second.get(), compareList.get(indexX))) {
+                return false;
+            }
+            second = second.getNext();
+            if(second == null) {
+                indexOfSecond++;
+                if(indexOfSecond < arrayList.size()) {
+                    second = arrayList.get(indexOfSecond).getHead();
+                }
+            } 
+            indexX--;
+        }
+
+        return true;
     }
 
 }
