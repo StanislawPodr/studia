@@ -54,10 +54,10 @@ class TwoWayCycledListWithSentinelTest {
         list.add(null);
         list.add(null);
         assertTrue(list.isPalindrom());
-        list.add(null);
-        list.add(null);
-        list.add(null);
         list.add(1);
         assertFalse(list.isPalindrom());
+        list.clear();
+        assertTrue(list.isPalindrom());
+
     }
 }

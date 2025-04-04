@@ -41,7 +41,7 @@ def SSTF(input : list, startingPoint, max=200):
     pltShow(x, y)
     return sum
 
-def SCAN(input : list, startingPoint, max=200):
+def SCAN(input : list, startingPoint, CSCAN=False, max=200):
     y = []
     sum = 0
     current = startingPoint 
@@ -68,7 +68,7 @@ def SCAN(input : list, startingPoint, max=200):
         y.append(sum)
     pltShow(x, y)
     return sum
-    
+
     
 #print(FCFS([98,183,37,122,14,124,65,67], 53))
 #print(SSTF([98,183,37,122,14,124,65,67], 53))
