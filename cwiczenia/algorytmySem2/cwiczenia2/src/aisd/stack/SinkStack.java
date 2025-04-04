@@ -5,7 +5,7 @@ import aisd.queue.EmptyQueueException;
 public class SinkStack<T> implements IStack<T> {
 
     private static final int DEFAULT_CAPACITY = 16;
-    T array[];
+    T[] array;
     int beginIndex;
     int endIndex;
 
@@ -32,8 +32,7 @@ public class SinkStack<T> implements IStack<T> {
     public T pop() throws EmptyStackException {
         if (isEmpty())
             throw new EmptyStackException();
-        T retValue = array[--endIndex];
-        return retValue;
+        return array[--endIndex];
     }
 
     @Override

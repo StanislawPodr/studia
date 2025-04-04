@@ -6,7 +6,7 @@ public class FlaviusProblem {
     int k;
 
     public FlaviusProblem(int n, int k) {
-        if (n == 0 || k == 0) {
+        if (n <= 0 || k <= 0) {
             throw new IllegalArgumentException();
         }
         this.n = n;

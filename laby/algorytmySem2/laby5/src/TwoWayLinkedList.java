@@ -9,11 +9,11 @@ public class TwoWayLinkedList<E> implements IList<E> {
     private int size = 0;
 
     private record NodeWithIndex<E>(Node<E> node, int index) {
-    };
+    }
 
     public TwoWayLinkedList() {
-        headSentinel = new Node<E>(null);
-        tailSentinel = new Node<E>(null, headSentinel);
+        headSentinel = new Node<>(null);
+        tailSentinel = new Node<>(null, headSentinel);
     }
 
     @Override
@@ -112,8 +112,8 @@ public class TwoWayLinkedList<E> implements IList<E> {
             return null;
         }
 
-        Node<E> nodeForNonEvenIndex = new Node<E>(null, null, headSentinel.getNext());
-        Node<E> nodeForEvenIndex = new Node<E>(null, null, nodeForNonEvenIndex.getNext().getPrevious());
+        Node<E> nodeForNonEvenIndex = new Node<>(null, null, headSentinel.getNext());
+        Node<E> nodeForEvenIndex = new Node<>(null, null, nodeForNonEvenIndex.getNext().getPrevious());
         int index = -2;
         boolean foundForNonEven = false;
         boolean foundForEven = false;
