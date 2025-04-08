@@ -16,7 +16,6 @@ public class TwoWayCycledListWithSentinel<E> {
     public boolean isPalindrom() {
         Element fromEnd = sentinel.getPrev();
         Element fromStart = sentinel.getNext();
-        boolean isPalindrome = true;
         while (fromEnd != fromStart) {
             if (!Objects.equals(fromEnd.getValue(), fromStart.getValue())) {
                 return false;
@@ -25,7 +24,7 @@ public class TwoWayCycledListWithSentinel<E> {
             fromStart = fromStart.getNext();
         }
 
-        return isPalindrome;
+        return true;
     }
 
     private Element getElement(int index) {
