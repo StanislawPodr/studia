@@ -66,4 +66,12 @@ public class InsertionSortWithBinarySearchTest {
 
         assertEquals(Arrays.asList(1, 2, 3, 4, 5), sortedList);
     }
+
+    @Test
+    public void testSortSameValuesRepeated() {
+        InsertionSortWithBinarySearch<Integer> sorter = new InsertionSortWithBinarySearch<Integer>(Comparator.naturalOrder());
+        List<Integer> input = Arrays.asList(7, 7, 7, 7, 6);
+        List<Integer> expected = Arrays.asList(6, 7, 7, 7, 7);
+        assertEquals(expected, sorter.sort(input));
+    }
 }

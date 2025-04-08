@@ -10,12 +10,13 @@ public class InsertionSortWithBinarySearch<T> extends AbstractSwappingSortingAlg
 
     @Override
     public List<T> sort(List<T> list) {
-        for (int i = list.size() - 1; i > 0; i--) {
+        for (int i = list.size() - 2; i >= 0; i--) {
             T key = list.get(i);
 
-            int position = binarySearch(list, key, i, list.size() - 1);
+            int position = binarySearch(list, key, i + 1, list.size() - 1);
 
             int j = i;
+
             while (j < position) {
                 list.set(j, list.get(j + 1));
                 j++;
@@ -26,17 +27,15 @@ public class InsertionSortWithBinarySearch<T> extends AbstractSwappingSortingAlg
     }
 
     private int binarySearch(List<T> list, T key, int low, int high) {
-        while (low < high) {
+        while (low <= high) {
             int mid = low + (high - low) / 2;
             if (compare(list.get(mid), key) < 0) {
                 low = mid + 1;
-            } else if(compare(list.get(mid), key) > 0) {
-                high = mid - 1;
             } else {
-                return mid;
-            }
+                high = mid - 1;
+            } 
         }
-        return low;
+        return high;
     }
 
 }
