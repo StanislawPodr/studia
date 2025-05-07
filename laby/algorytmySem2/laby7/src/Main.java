@@ -63,8 +63,8 @@ public class Main {
 			for (int i = 0; i <= 10000; i += 500) {
 				Generator<MarkedValue<Integer>> generator = new MarkingGenerator<Integer>(
 						new RandomIntegerArrayGenerator(10));
-				Generator<MarkedValue<Integer>> generatorList = new MarkingGenerator<Integer>(
-						new RandomIntegerArrayGenerator(10));
+				Generator<MarkedValue<Integer>> generatorList = new MarkingGenerator<>(
+						new LinkedListGenerator<>(new RandomIntegerArrayGenerator(10)));
 				testing.results.Result resultMerge = Tester.runNTimes(mergeSort, generator, i, 20);
 				writeResultsWithoutSwapsToCsv(i, resultMerge, writerRandomMerge);
 				resultMerge = Tester.runNTimes(mergeSort, generatorList, i, 20);
@@ -76,6 +76,8 @@ public class Main {
 
 				generator = new MarkingGenerator<Integer>(
 						new OrderedIntegerArrayGenerator());
+				generatorList = new MarkingGenerator<>(
+						new LinkedListGenerator<>(new OrderedIntegerArrayGenerator()));
 				resultMerge = Tester.runNTimes(mergeSort, generator, i, 20);
 				writeResultsWithoutSwapsToCsv(i, resultMerge, writerOrderedMerge);
 				resultMerge = Tester.runNTimes(mergeSort, generatorList, i, 20);
@@ -87,6 +89,8 @@ public class Main {
 
 				generator = new MarkingGenerator<Integer>(
 						new ReversedIntegerArrayGenerator());
+				generatorList = new MarkingGenerator<>(
+						new LinkedListGenerator<>(new ReversedIntegerArrayGenerator()));
 				resultMerge = Tester.runNTimes(mergeSort, generator, i, 20);
 				writeResultsWithoutSwapsToCsv(i, resultMerge, writerReversedMerge);
 				resultMerge = Tester.runNTimes(mergeSort, generatorList, i, 20);
@@ -98,6 +102,8 @@ public class Main {
 
 				generator = new MarkingGenerator<Integer>(
 						new ShuffledIntegerArrayGenerator());
+				generatorList = new MarkingGenerator<>(
+						new LinkedListGenerator<>(new ShuffledIntegerArrayGenerator()));
 				resultMerge = Tester.runNTimes(mergeSort, generator, i, 20);
 				writeResultsWithoutSwapsToCsv(i, resultMerge, writerShuffledMerge);
 				resultMerge = Tester.runNTimes(mergeSort, generatorList, i, 20);
