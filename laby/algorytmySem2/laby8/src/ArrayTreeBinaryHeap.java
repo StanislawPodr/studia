@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 
-public class ArrayTreeBinaryHeap<T> implements Heap<T> {
-    private ArrayList<BinaryT> heap;
+public class ArrayTreeBinaryHeap<T extends Comparable<? super T>> implements Heap<T> {
+    private ArrayList<HeapTree<T>> heap;
     private int size;
     private int capacity;
     @Override
