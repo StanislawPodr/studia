@@ -1,3 +1,4 @@
+import java.util.Comparator;
 import java.util.NoSuchElementException;
 import java.util.Queue;
 
@@ -7,17 +8,20 @@ public class HeapTree<T extends Comparable<? super T>> implements Heap<T> {
     private HeapTree<T> right;
     private HeapTree<T> parent;
     private HeapTree<T> lastNodeAdded;
+    private Comparator<T> comparator;
 
-    public HeapTree(T value) {
+    public HeapTree(T value, Comparator<T> comparator) {
         this.value = value;
+        this.comparator = comparator;
     }
 
-    public HeapTree(T value, HeapTree<T> parent) {
-        this(value);
+    public HeapTree(T value, Comparator<T> comparator, HeapTree<T> parent) {
+        this(value, comparator);
         this.parent = parent;
     }
 
-    public HeapTree() {
+    public HeapTree(Comparator<T> comparator) {
+        this.comparator = comparator;
     }
 
     public boolean add(T value) {
@@ -38,10 +42,12 @@ public class HeapTree<T extends Comparable<? super T>> implements Heap<T> {
         while (!added) {
             current = queue.poll();
             if (current.left == null) {
-                current.left = new HeapTree<>(value, current);
+                current.left = new HeapTree<>(value, comparator, current);
+                lastNodeAdded = current.left;
                 added = true;
             } else if (current.right == null) {
-                current.right = new HeapTree<>(value, current);
+                current.right = new HeapTree<>(value, comparator, current);
+                lastNodeAdded = current.right;
                 added = true;
             } else {
                 queue.add(current.left);
@@ -49,8 +55,7 @@ public class HeapTree<T extends Comparable<? super T>> implements Heap<T> {
             }
         }
 
-        swim(current);
-        lastNodeAdded = current;
+        swim(lastNodeAdded);
         return true;
     }
 
@@ -107,13 +112,15 @@ public class HeapTree<T extends Comparable<? super T>> implements Heap<T> {
     }
 
     private void sink(HeapTree<T> node) {
-        if (node == null || node.parent == null) {
+        if (node == null) {
             return;
         }
         HeapTree<T> smallest = node;
         if (node.left != null && node.left.value.compareTo(smallest.value) < 0) {
             smallest = node.left;
-        } else if (node.right != null && node.right.value.compareTo(smallest.value) < 0) {
+        } 
+        
+        if (node.right != null && node.right.value.compareTo(smallest.value) < 0) {
             smallest = node.right;
         }
 
