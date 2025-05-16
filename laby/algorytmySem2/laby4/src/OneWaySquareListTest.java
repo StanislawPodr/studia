@@ -127,6 +127,11 @@ public class OneWaySquareListTest {
         list.add(2);
         list.add(3);
         list.add(4);
+        list.add(4);
+        list.add(4);
+        list.add(9);
+        list.add(9);
+        list.add(9);
 
         // This test is for manual verification of the print output
         list.print();
