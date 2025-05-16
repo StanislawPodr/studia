@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 import java.util.List;
 
-public class InsertionSortFromRightDescending<T extends Comparable<T>> {
+public class InsertionSortFromRightDescending<T extends Comparable<? super T>> {
     public void sort(List<T> list) {
         if (list == null || list.size() < 2) {
             return;
