@@ -1,27 +1,21 @@
+import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Queue;
 
-public class HeapTree<T extends Comparable<? super T>> implements Heap<T> {
-    private T value;
-    private HeapTree<T> left;
-    private HeapTree<T> right;
-    private HeapTree<T> parent;
-    private HeapTree<T> lastNodeAdded;
-    private Comparator<T> comparator;
+public class HeapTree<T> extends Node<T> implements Heap<T> {
+    private Node<T> lastNodeAdded;
+    private ComparatorReference<T> comparator;
 
     public HeapTree(T value, Comparator<T> comparator) {
-        this.value = value;
-        this.comparator = comparator;
-    }
-
-    public HeapTree(T value, Comparator<T> comparator, HeapTree<T> parent) {
-        this(value, comparator);
-        this.parent = parent;
+        super(value, null);
+        this.comparator = new ComparatorReference<>(comparator);
     }
 
     public HeapTree(Comparator<T> comparator) {
-        this.comparator = comparator;
+        super(null, null);
+        this.comparator = new ComparatorReference<>(comparator);
     }
 
     public boolean add(T value) {
@@ -35,18 +29,18 @@ public class HeapTree<T extends Comparable<? super T>> implements Heap<T> {
             return true;
         }
 
-        Queue<HeapTree<T>> queue = new java.util.LinkedList<>();
+        Queue<Node<T>> queue = new java.util.LinkedList<>();
         boolean added = false;
         queue.add(this);
-        HeapTree<T> current = null;
+        Node<T> current = null;
         while (!added) {
             current = queue.poll();
             if (current.left == null) {
-                current.left = new HeapTree<>(value, comparator, current);
+                current.left = new Node<>(value, current);
                 lastNodeAdded = current.left;
                 added = true;
             } else if (current.right == null) {
-                current.right = new HeapTree<>(value, comparator, current);
+                current.right = new Node<>(value, current);
                 lastNodeAdded = current.right;
                 added = true;
             } else {
@@ -67,8 +61,8 @@ public class HeapTree<T extends Comparable<? super T>> implements Heap<T> {
         lastNodeAdded = null;
     }
 
-    private void swim(HeapTree<T> node) {
-        if (node.parent != null && node.value.compareTo(node.parent.value) < 0) {
+    private void swim(Node<T> node) {
+        if (node.parent != null && comparator.compare(node.value, node.parent.value) < 0) {
             T temp = node.value;
             node.value = node.parent.value;
             node.parent.value = temp;
@@ -87,8 +81,34 @@ public class HeapTree<T extends Comparable<? super T>> implements Heap<T> {
             return min;
         }
 
-        this.value = lastNodeAdded.value;
-        HeapTree<T> forDeletion = lastNodeAdded;
+        this.value = deleteLastNode();
+        sinkThis();
+        return min;
+    }
+
+    private void sink(Node<T> node) {
+        if (node == null) {
+            return;
+        }
+        Node<T> smallest = node;
+        if (node.left != null && comparator.compare(node.left.value, smallest.value) < 0) {
+            smallest = node.left;
+        }
+
+        if (node.right != null && comparator.compare(node.right.value, smallest.value) < 0) {
+            smallest = node.right;
+        }
+
+        if (smallest != node) {
+            T temp = node.value;
+            node.value = smallest.value;
+            smallest.value = temp;
+            sink(smallest);
+        }
+    }
+
+    T deleteLastNode() {
+        Node<T> forDeletion = lastNodeAdded;
         while (lastNodeAdded.parent != null && lastNodeAdded.parent.right != lastNodeAdded) {
             lastNodeAdded = lastNodeAdded.parent;
         }
@@ -106,29 +126,31 @@ public class HeapTree<T extends Comparable<? super T>> implements Heap<T> {
         } else {
             forDeletion.parent.right = null;
         }
+        return forDeletion.value;
+    }
 
+    void sinkThis() {
         sink(this);
-        return min;
     }
 
-    private void sink(HeapTree<T> node) {
-        if (node == null) {
-            return;
-        }
-        HeapTree<T> smallest = node;
-        if (node.left != null && node.left.value.compareTo(smallest.value) < 0) {
-            smallest = node.left;
-        } 
-        
-        if (node.right != null && node.right.value.compareTo(smallest.value) < 0) {
-            smallest = node.right;
+    public T getValue() {
+        return value;
+    }
+
+    void setValue(T value) {
+        this.value = value;
+    }
+
+    public void setComparator(Comparator<T> comparator) {
+        this.comparator.setComparator(comparator);
+        List<T> array = new ArrayList<>();
+        while(this.value != null) {
+            array.add(minimum());
         }
 
-        if (smallest != node) {
-            T temp = node.value;
-            node.value = smallest.value;
-            smallest.value = temp;
-            sink(smallest);
+        for (T val : array) {
+            add(val);
         }
     }
+
 }

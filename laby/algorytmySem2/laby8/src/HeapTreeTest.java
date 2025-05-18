@@ -1,6 +1,8 @@
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 import static org.junit.jupiter.api.Assertions.*;
+
+import java.util.Comparator;
 import java.util.NoSuchElementException;
 
 public class HeapTreeTest {
@@ -9,7 +11,7 @@ public class HeapTreeTest {
 
     @BeforeEach
     public void setUp() {
-        heap = new HeapTree<>();
+        heap = new HeapTree<Integer>(Comparator.naturalOrder());
     }
 
     @Test
@@ -63,5 +65,14 @@ public class HeapTreeTest {
         assertEquals(6, heap.minimum());
         assertEquals(8, heap.minimum());
         assertEquals(10, heap.minimum());
+    }
+
+     @Test   
+    void testSetComparator() {
+        for (int i = 0; i < 10000; i++) {
+            heap.add(i);
+        }
+        heap.setComparator(Comparator.reverseOrder());
+        assertEquals(9999, heap.minimum());
     }
 }
