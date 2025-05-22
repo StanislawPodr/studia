@@ -1,0 +1,126 @@
+import algorithms
+
+from process import Process
+from process import Reference
+import frames 
+
+class Simulation:
+    def __init__(self, memory_manager: algorithms.MemoryManager, frames_allocation: frames.Frames, physical_memory_size: int, processes: list):
+        self.memory_manager = memory_manager
+        self.frames_allocation = frames_allocation
+        self.physical_memory_size = physical_memory_size
+        self.processes = processes
+
+    def simulate(self, references: list, w: int):
+        """
+        Simulates the memory management process using the specified memory manager.
+
+        Args:
+            references (list): A list of references to simulate.
+        """
+        for process in self.processes:
+            self.frames_allocation.init_max_number_of_frames(process)
+        for time, reference in enumerate(references):
+            self.frames_allocation.set_max_number_of_frames(reference.process)
+            self.memory_manager.next_page(reference, time)
+            for process in self.processes:
+                process.adjust(time, w)
+
+
+
+def generateReferences(size_of_block : int, num_per_block : int, processes : list, number_of_blocks : int) -> list:
+    """
+    Generates a list of references based on the specified parameters.
+
+    Args:
+        size_of_block (int): The number of references to include in each block.
+        num_per_block (int): The number of unique references to sample from for each block.
+        processes (list): A list of processes to generate references for.
+        number_of_blocks (int): The number of blocks to generate.
+
+    Returns:
+        list: A list of references generated based on the input parameters.
+    """
+    import random
+    references = []
+    for _ in range(number_of_blocks):
+        temp = []
+        for process in processes:
+            k = random.sample(range(1, process.virtual_memory_size + 1), num_per_block)
+            temp += [Reference(i, process) for i in random.choices(k, k=size_of_block)]
+        random.shuffle(temp)
+        references += temp
+    return references
+
+    
+def show_chart(processes: list, raport_e: float) -> None:
+    import matplotlib.pyplot as plt
+    import matplotlib.cm as cm
+    import numpy as np
+
+    _, axs = plt.subplots(len(processes), 1, figsize=(10, 4 * len(processes)), sharex=True)
+    axs = np.atleast_1d(axs)
+
+    # Use a color map to assign different colors to each process
+    cmap = cm.get_cmap('tab10')
+    colors = [cmap(i % 10) for i in range(len(processes))]
+
+    for i, process in enumerate(processes):
+        if isinstance(process.raport_e, list) and len(process.raport_e) > 0 and isinstance(process.raport_e[0], tuple):
+            times, es = zip(*process.raport_e)
+        else:
+            times = list(range(len(process.raport_e)))
+            es = process.raport_e
+
+        times = np.array(times)
+        es = np.array(es)
+
+        # Plot values below or equal to raport_e in the default color
+        below = es <= raport_e
+        axs[i].plot(times[below], es[below], marker='o', linestyle='-', color=colors[i], label=f"Process {i} (E ≤ {raport_e})")
+
+        # Plot red dots for values above raport_e, only connecting consecutive points
+        above_indices = np.where(es > raport_e)[0]
+        if above_indices.size > 0:
+            # Find consecutive runs
+            runs = np.split(above_indices, np.where(np.diff(above_indices) != 1)[0] + 1)
+            for run in runs:
+                axs[i].plot(times[run], es[run], marker='o', linestyle='-', color='red', label=f"Process {i} (E > {raport_e})" if run is runs[0] else "")
+
+        # Calculate statistics
+        avg_e = np.mean(es)
+        percent_above = 100.0 * np.sum(es > raport_e) / len(es) if len(es) > 0 else 0
+
+        # Annotate statistics near the chart
+        stats_text = f"Avg E: {avg_e:.2f}\n% E > {raport_e}: {percent_above:.1f}%"
+        axs[i].text(1.02, 0.5, stats_text, transform=axs[i].transAxes, va='center', ha='left', fontsize=11, bbox=dict(facecolor='white', alpha=0.7, edgecolor='gray'))
+
+        axs[i].set_ylabel("E")
+        axs[i].set_title(f"Process {i}: E over Time")
+        axs[i].legend()
+        axs[i].grid(True)
+
+    axs[-1].set_xlabel("Time")
+    plt.tight_layout()
+    plt.show()
+
+
+def main():
+    physical_memory_size = 10
+    processes = [Process(100000)]
+    references = generateReferences(40, 100, processes, 50)
+    frames_allocation = frames.EqualAllocation(physical_memory_size, len(processes))
+    w = 5
+    raport_e = 0.5
+
+    memory_manager = algorithms.FIFO()
+
+    simulation = Simulation(memory_manager, frames_allocation, physical_memory_size, processes)
+
+    simulation.simulate(references, w=w)
+    show_chart(processes, raport_e)
+    print("Simulation completed.")
+
+
+if __name__ == "__main__":
+    main()
