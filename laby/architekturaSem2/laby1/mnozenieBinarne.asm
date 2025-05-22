@@ -1,6 +1,6 @@
 .data 
-x: .word 2147483647
-y: .word 2
+x: .word 536
+y: .word 10
 wyn.: .space 4
 status: .space 4
 
@@ -12,6 +12,7 @@ main:
 	li $t2, 1 #zapisanie maski maj¹cej na celu wykonanie operacji na konkretnym bicie mno¿nika
 	li $t3, 31 #licznik o ile bitów nale¿y przesun¹æ 
 	li $t9, 0 #ustawiamy przepe³nienie na fa³sz
+	li $t6, 0 #ustawiamy wynik na 0
 loop:
 	and $t4, $t1, $t2 #wyizolowanie bitu z mno¿nika który nas interesuje dziêki masce
 	sllv $t4, $t4, $t3 #przesuniêcie na lewy koniec liczby bitu który nas interesuje (o licznik przesuniêæ)
@@ -30,9 +31,7 @@ skip_check_for_shift:
 	j check_after_shift #robimy pêtlê
 skip_check_for_overflow:	
 	addu $t7, $t6, $t4 #dodanie kolejnej czêœci do wyniku, aby sprawdziæ przepe³nienie wynik dajemy tymczasowo do nowego rejestru
-	xor $t8, $t6, $t4 #zrobienie xor-a na ka¿dej czêœci sumy (wynik ujemny gdy znaki s¹ ró¿e)
 	beq $t4, 0, skip_check_after_addition #je¿eli dodajemy 0 to na pewno nie bêdzie przepe³nienia
-	bltz $t8, skip_check_after_addition #je¿eli znaki s¹ ró¿ne to przepe³nienie nie wyst¹pi
 	xor $t8, $t7, $t6 #wynik ujemny, gdy znaki wyniku i danych siê ró¿ni¹ (przepe³nienie wyst¹pi³o)
 	bgtz $t8, skip_check_after_addition #gdy $t8 wiêksze od zera to nie ma przepe³nienia
 	li $t9, 1 #ustawiamy przepe³nienie na prawda
@@ -46,6 +45,8 @@ skip_check_after_addition:
 	sw $t6, 0($t0) #zapis wyniku do etykiety wyn.
 	move $a0, $t6 #przeniesienie wyniku do a0
 	syscall 
+	la $t0, status
+	sw $t9, 0($t0)
 	move $a0, $t9
 	syscall
 	li $v0, 10
