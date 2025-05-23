@@ -131,7 +131,7 @@ public class ArrayTreeBinaryHeap<T> implements Heap<T> {
         int startTreeIndex = (heap.capacity - 1) / 2;
         int max = heap.heap.get(0).getValue();
         int k = 1;
-        int current = 0;
+        Integer current = 0;
         List<Integer> currentList = new ArrayList<>();
         List<Integer> result = new ArrayList<>();
         result.add(heap.heap.get(0).getValue());
@@ -186,16 +186,22 @@ public class ArrayTreeBinaryHeap<T> implements Heap<T> {
                 }
                 k = k * 2 + 1;
                 currentList = new ArrayList<>(currentList.size() * 2);
-                current = 0;
+                current = null;
             }
             Node<Integer> node = queue.poll();
             if (node.getLeft() != null) {
                 queue.add(node.getLeft());
+                if(current == null) {
+                    current = 0;
+                }
                 current += node.getLeft().getValue();
                 currentList.add(node.getLeft().getValue());
             }
             if (node.getRight() != null) {
                 queue.add(node.getRight());
+                if(current == null) {
+                    current = 0;
+                }
                 current += node.getRight().getValue();
                 currentList.add(node.getRight().getValue());
             }
@@ -203,7 +209,7 @@ public class ArrayTreeBinaryHeap<T> implements Heap<T> {
             index+=2;
         }
 
-        if (current > max) {
+        if (current != null && current > max) {
             result = currentList;
         }
         return result;

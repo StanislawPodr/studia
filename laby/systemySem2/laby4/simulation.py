@@ -11,7 +11,7 @@ class Simulation:
         self.physical_memory_size = physical_memory_size
         self.processes = processes
 
-    def simulate(self, references: list, w: int):
+    def simulate(self, references: list, w: int, skip: int = 0) -> None:
         """
         Simulates the memory management process using the specified memory manager.
 
@@ -20,10 +20,12 @@ class Simulation:
         """
         for process in self.processes:
             self.frames_allocation.init_max_number_of_frames(process)
+
         for time, reference in enumerate(references):
-            self.frames_allocation.set_max_number_of_frames(reference.process)
             self.memory_manager.next_page(reference, time)
             for process in self.processes:
+                if time > skip:
+                    self.frames_allocation.set_max_number_of_frames(reference.process)
                 process.adjust(time, w)
 
 
@@ -33,7 +35,7 @@ def generateReferences(size_of_block : int, num_per_block : int, processes : lis
     Generates a list of references based on the specified parameters.
 
     Args:
-        size_of_block (int): The number of references to include in each block.
+        size_of_block (int): How many data in single block.
         num_per_block (int): The number of unique references to sample from for each block.
         processes (list): A list of processes to generate references for.
         number_of_blocks (int): The number of blocks to generate.
@@ -87,10 +89,17 @@ def show_chart(processes: list, raport_e: float) -> None:
         percent_above = 100.0 * np.sum(es > raport_e) / len(es) if len(es) > 0 else 0
 
         stats_text = f"Avg E: {avg_e:.2f}\n% E > {raport_e}: {percent_above:.1f}%"
+        if hasattr(process, 'halted') and process.halted:
+            stats_text += "\nStatus: Halted"
+
         axs[i].text(1.02, 0.5, stats_text, transform=axs[i].transAxes, va='center', ha='left', fontsize=11, bbox=dict(facecolor='white', alpha=0.7, edgecolor='gray'))
 
+        title_text = f"Process {i}: E over Time"
+        if hasattr(process, 'halted') and process.halted:
+            title_text += " (Halted)"
+
         axs[i].set_ylabel("E")
-        axs[i].set_title(f"Process {i}: E over Time")
+        axs[i].set_title(title_text)
         axs[i].legend()
         axs[i].grid(True)
 
@@ -107,13 +116,39 @@ def main():
     w = 30
     raport_e = 0.5
 
-    memory_manager = algorithms.FIFO()
+    memory_manager = algorithms.LRU()
 
     simulation = Simulation(memory_manager, frames_allocation, physical_memory_size, processes)
+    simulation.simulate(references, w)
+    show_chart(processes, raport_e)
 
+    for process in processes:
+        process.reset_process()
+
+
+    frames_allocation = frames.ProportionalAllocation(physical_memory_size, 600)
+    #memory_manager = algorithms.LRU()
+    simulation = Simulation(memory_manager, frames_allocation, physical_memory_size, processes)
+    simulation.simulate(references, w)
+    show_chart(processes, raport_e)
+
+    for process in processes:
+        process.reset_process()
+
+    frames_allocation = frames.PageFaultsAllocation(physical_memory_size, processes, 0.2, 0.8)
+    simulation = Simulation(memory_manager, frames_allocation, physical_memory_size, processes)
+
+    simulation.simulate(references, w=w, skip = 300)
+    show_chart(processes, raport_e)
+
+    for process in processes:
+        process.reset_process()
+
+    halting_strategy = frames.LowestWss()
+    frames_allocation = frames.ZoneModelAllocation(physical_memory_size, 600, processes, halting_strategy)
+    simulation = Simulation(memory_manager, frames_allocation, physical_memory_size, processes)
     simulation.simulate(references, w=w)
     show_chart(processes, raport_e)
-    print("Simulation completed.")
 
 
 if __name__ == "__main__":

@@ -145,12 +145,13 @@ class ArrayTreeBinaryHeapTest {
     void testHotLevelWithMoreThanCapacityNegativeValues() {
         // For H=3, capacity=7, add more than 7 elements
         for (int i = 1; i <= 15; i++) {
-            heap.add(i);
+            heap.add(-i);
         }
         // Just check it does not throw and returns a non-empty list
         List<Integer> result = ArrayTreeBinaryHeap.hotLevel(heap);
         assertNotNull(result);
         assertFalse(result.isEmpty());
+        assertEquals(result, List.of(-15));
     }
 
 }

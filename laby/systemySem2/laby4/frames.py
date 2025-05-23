@@ -91,29 +91,7 @@ class ZoneModelAllocation(Frames):
         
     def init_max_number_of_frames(self, process: Process) -> None:
         pass
-        
-    def set_max_number_of_frames(self, process: Process) -> None:
-        if process.halted:
-            return
-        available_frames = self.frames_in_system - sum(p.max_number_of_frames for p in self.processes)
-        wss = self.calculate_WSS(process)
-        if wss - len(process.frames) < available_frames:
-            process.max_number_of_frames = wss
-        else:
-            wss = [self.calculate_WSS(p) for p in self.processes]
-            process_to_halt = self.halting_strategy.halt(wss, self.processes)
-            process_to_halt.halted = True
-            frames_to_allocate = process_to_halt.max_number_of_frames
-            process_to_halt.max_number_of_frames = 0
-            
-    
-    def calculate_WSS(self, process: Process) -> int:
-        used_frames = set()
-        for frame in process.frames_accessed:
-            used_frames.add(frame[1])
-        for frame in process.page_faults:
-            used_frames.add(frame[1])
-        return len(used_frames)
+
 
     def re_allocate_frames(self, processes: list, frames_to_allocate: int) -> None:
         processes_not_halted = []
@@ -126,6 +104,31 @@ class ZoneModelAllocation(Frames):
         for process in processes_not_halted:
            process.max_number_of_frames = int(process.virtual_memory_size / virtual_memory_capacity * frames_to_allocate)
                
+        
+    def set_max_number_of_frames(self, process: Process) -> None:
+        if process.halted:
+            return
+        available_frames = self.frames_in_system - sum(p.max_number_of_frames for p in self.processes)
+        wss = self.calculate_WSS(process)
+        if wss - len(process.frames) <= available_frames:
+            process.max_number_of_frames = wss
+        else:
+            wss = [self.calculate_WSS(p) for p in self.processes]
+            process_to_halt = self.halting_strategy.halt(wss, self.processes)
+            process_to_halt.halted = True
+            available_frames += process_to_halt.max_number_of_frames
+            process_to_halt.max_number_of_frames = 0
+            self.re_allocate_frames(self.processes, available_frames)
+            
+    
+    def calculate_WSS(self, process: Process) -> int:
+        used_frames = set()
+        for frame in process.frames_accessed:
+            used_frames.add(frame[1])
+        for frame in process.page_faults:
+            used_frames.add(frame[1])
+        return len(used_frames)
+
 
 class LowestWss(ZoneModelHaltingStrategy):
     def halt(self, wss: list, processes : list) -> Process:
