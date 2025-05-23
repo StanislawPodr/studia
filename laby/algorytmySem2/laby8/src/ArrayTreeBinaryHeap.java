@@ -1,12 +1,15 @@
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
 public class ArrayTreeBinaryHeap<T> implements Heap<T> {
     private ArrayList<HeapTree<T>> heap;
     private int size;
     private int capacity;
     private ComparatorReference<T> comparator;
+    private int H;
 
     public ArrayTreeBinaryHeap(int H, Comparator<T> comparator) {
         if (H < 1) {
@@ -16,6 +19,7 @@ public class ArrayTreeBinaryHeap<T> implements Heap<T> {
         this.capacity = (int) Math.pow(2, H) - 1;
         this.heap = new ArrayList<>(capacity);
         this.comparator = new ComparatorReference<>(comparator);
+        this.H = H;
     }
 
     @Override
@@ -114,10 +118,95 @@ public class ArrayTreeBinaryHeap<T> implements Heap<T> {
         for (int i = 0; i < size; i++) {
             array.add(minimum());
         }
-        
+
         for (T element : array) {
             add(element);
         }
+    }
+
+    public static List<Integer> hotLevel(ArrayTreeBinaryHeap<Integer> heap) {
+        if (heap == null || heap.size == 0) {
+            throw new IllegalArgumentException("Heap is empty");
+        }
+        int startTreeIndex = (heap.capacity - 1) / 2;
+        int max = heap.heap.get(0).getValue();
+        int k = 1;
+        int current = 0;
+        List<Integer> currentList = new ArrayList<>();
+        List<Integer> result = new ArrayList<>();
+        result.add(heap.heap.get(0).getValue());
+        for (int i = 0; i < startTreeIndex && i < heap.size; i++) {
+            if (i == k) {
+                if (current > max) {
+                    max = current;
+                    result = currentList;
+                }
+                k = k * 2 + 1;
+                currentList = new ArrayList<>(currentList.size() * 2);
+                current = 0;
+            }
+            current += heap.heap.get(i).getValue();
+            currentList.add(heap.heap.get(i).getValue());
+        }
+
+        if (current > max) {
+            max = current;
+            result = currentList;
+        }
+
+        if(heap.size <= startTreeIndex) {
+            return result;
+        }
+
+        Queue<Node<Integer>> queue = new LinkedList<>();
+        current = 0;
+        currentList = new ArrayList<>(currentList.size() * 2);
+        for (int i = startTreeIndex; i < heap.heap.size(); i++) {
+            queue.add(heap.heap.get(i));
+            current += heap.heap.get(i).getValue();
+            currentList.add(heap.heap.get(i).getValue());
+        }
+
+        if (current > max) {
+            max = current;
+            result = currentList;
+        }
+
+        if(heap.size <= heap.capacity) {
+            return result;
+        }
+
+        k = heap.capacity;
+        int index = heap.capacity;
+        while (!queue.isEmpty()) {
+            if (index == k) {
+                if (current > max) {
+                    max = current;
+                    result = currentList;
+                }
+                k = k * 2 + 1;
+                currentList = new ArrayList<>(currentList.size() * 2);
+                current = 0;
+            }
+            Node<Integer> node = queue.poll();
+            if (node.getLeft() != null) {
+                queue.add(node.getLeft());
+                current += node.getLeft().getValue();
+                currentList.add(node.getLeft().getValue());
+            }
+            if (node.getRight() != null) {
+                queue.add(node.getRight());
+                current += node.getRight().getValue();
+                currentList.add(node.getRight().getValue());
+            }
+
+            index+=2;
+        }
+
+        if (current > max) {
+            result = currentList;
+        }
+        return result;
     }
 
 }

@@ -7,4 +7,17 @@ class Node<T> {
         this.value = value;
         this.parent = parent;
     }
+    public T getValue() {
+        return value;
+    }
+    public Node<T> getLeft() {
+        return left;
+    }
+    public Node<T> getRight() {
+        return right;
+    }
+    public Node<T> getParent() {
+        return parent;
+    }
+    
 }

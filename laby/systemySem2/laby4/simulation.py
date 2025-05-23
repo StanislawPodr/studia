@@ -61,7 +61,6 @@ def show_chart(processes: list, raport_e: float) -> None:
     _, axs = plt.subplots(len(processes), 1, figsize=(10, 4 * len(processes)), sharex=True)
     axs = np.atleast_1d(axs)
 
-    # Use a color map to assign different colors to each process
     cmap = cm.get_cmap('tab10')
     colors = [cmap(i % 10) for i in range(len(processes))]
 
@@ -75,23 +74,18 @@ def show_chart(processes: list, raport_e: float) -> None:
         times = np.array(times)
         es = np.array(es)
 
-        # Plot values below or equal to raport_e in the default color
         below = es <= raport_e
         axs[i].plot(times[below], es[below], marker='o', linestyle='-', color=colors[i], label=f"Process {i} (E ≤ {raport_e})")
 
-        # Plot red dots for values above raport_e, only connecting consecutive points
         above_indices = np.where(es > raport_e)[0]
         if above_indices.size > 0:
-            # Find consecutive runs
             runs = np.split(above_indices, np.where(np.diff(above_indices) != 1)[0] + 1)
             for run in runs:
                 axs[i].plot(times[run], es[run], marker='o', linestyle='-', color='red', label=f"Process {i} (E > {raport_e})" if run is runs[0] else "")
 
-        # Calculate statistics
         avg_e = np.mean(es)
         percent_above = 100.0 * np.sum(es > raport_e) / len(es) if len(es) > 0 else 0
 
-        # Annotate statistics near the chart
         stats_text = f"Avg E: {avg_e:.2f}\n% E > {raport_e}: {percent_above:.1f}%"
         axs[i].text(1.02, 0.5, stats_text, transform=axs[i].transAxes, va='center', ha='left', fontsize=11, bbox=dict(facecolor='white', alpha=0.7, edgecolor='gray'))
 
@@ -106,11 +100,11 @@ def show_chart(processes: list, raport_e: float) -> None:
 
 
 def main():
-    physical_memory_size = 10
-    processes = [Process(100000)]
-    references = generateReferences(40, 100, processes, 50)
+    physical_memory_size = 100
+    processes = [Process(100), Process(200), Process(300)]
+    references = generateReferences(100, 50, processes, 50)
     frames_allocation = frames.EqualAllocation(physical_memory_size, len(processes))
-    w = 5
+    w = 30
     raport_e = 0.5
 
     memory_manager = algorithms.FIFO()
