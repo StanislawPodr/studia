@@ -1,47 +1,47 @@
 .data 
 x: .word 536
-y: .word 10
+y: .word 10000000
 wyn.: .space 4
 status: .space 4
 
 .text 
 .globl main
 main:
-	lw $t0, x #zapisanie do rejestru mno¿nej
-	lw $t1, y #zapisanie do rejestru mno¿nika
-	li $t2, 1 #zapisanie maski maj¹cej na celu wykonanie operacji na konkretnym bicie mno¿nika
-	li $t3, 31 #licznik o ile bitów nale¿y przesun¹æ 
-	li $t9, 0 #ustawiamy przepe³nienie na fa³sz
+	lw $t0, x #zapisanie do rejestru mnoï¿½nej
+	lw $t1, y #zapisanie do rejestru mnoï¿½nika
+	li $t2, 1 #zapisanie maski majï¿½cej na celu wykonanie operacji na konkretnym bicie mnoï¿½nika
+	li $t3, 31 #licznik o ile bitï¿½w naleï¿½y przesunï¿½ï¿½ 
+	li $t9, 0 #ustawiamy przepeï¿½nienie na faï¿½sz
 	li $t6, 0 #ustawiamy wynik na 0
 loop:
-	and $t4, $t1, $t2 #wyizolowanie bitu z mno¿nika który nas interesuje dziêki masce
-	sllv $t4, $t4, $t3 #przesuniêcie na lewy koniec liczby bitu który nas interesuje (o licznik przesuniêæ)
-	sra $t4, $t4, 31 #wype³nienie wszytskich znaków bitem znacz¹cym
-	and $t4, $t4, $t0 #sprawdzenie czy nale¿y dodaæ nasz¹ liczbê (jeœli istotny bit mia³ 0 to bedz¹ 32 zera, jeœli 1 to dodajemy liczbê)
-	li $t5, 31 #za³adowanie liczby która po odjêciu $t3 ma wskazywaæ ile trzeba przesun¹æ ¿eby zrobiæ "schodki" dla kolejnych liczb
-	sub $t5, $t5, $t3 #po odjêciu - musimy przed dodaniem przesun¹æ o tyle  w lewo
-	subi $t3, $t3, 1 #zmniejszenie licznika przesuniêæ w lewo o 1
+	and $t4, $t1, $t2 #wyizolowanie bitu z mnoï¿½nika ktï¿½ry nas interesuje dziï¿½ki masce
+	sllv $t4, $t4, $t3 #przesuniï¿½cie na lewy koniec liczby bitu ktï¿½ry nas interesuje (o licznik przesuniï¿½ï¿½)
+	sra $t4, $t4, 31 #wypeï¿½nienie wszytskich znakï¿½w bitem znaczï¿½cym
+	and $t4, $t4, $t0 #sprawdzenie czy naleï¿½y dodaï¿½ naszï¿½ liczbï¿½ (jeï¿½li istotny bit miaï¿½ 0 to bedzï¿½ 32 zera, jeï¿½li 1 to dodajemy liczbï¿½)
+	li $t5, 31 #zaï¿½adowanie liczby ktï¿½ra po odjï¿½ciu $t3 ma wskazywaï¿½ ile trzeba przesunï¿½ï¿½ ï¿½eby zrobiï¿½ "schodki" dla kolejnych liczb
+	sub $t5, $t5, $t3 #po odjï¿½ciu - musimy przed dodaniem przesunï¿½ï¿½ o tyle  w lewo
+	subi $t3, $t3, 1 #zmniejszenie licznika przesuniï¿½ï¿½ w lewo o 1
 check_after_shift:
-	beq $t5, $zero, skip_check_for_overflow #pêtla while wykonuj¹ca siê tyle razy ile potrzebujemy schodkówfunkcji
-	subi $t5, $t5, 1 #dekrementacja $t5 (licznika dla pêtli)
-	bgez  $t4, skip_check_for_shift #jak nie bêdzie przepe³nienia ($t4 >= 0) to nie zmieniamy $t9
-	li $t9, 1 #ustawiamy przepe³nienie na prawda
+	beq $t5, $zero, skip_check_for_overflow #pï¿½tla while wykonujï¿½ca siï¿½ tyle razy ile potrzebujemy schodkï¿½wfunkcji
+	subi $t5, $t5, 1 #dekrementacja $t5 (licznika dla pï¿½tli)
+	bgez  $t4, skip_check_for_shift #jak nie bï¿½dzie przepeï¿½nienia ($t4 >= 0) to nie zmieniamy $t9
+	li $t9, 1 #ustawiamy przepeï¿½nienie na prawda
 skip_check_for_shift:
-	sll $t4, $t4, 1 #przesuniêcie i zrobienie "schodka"
-	j check_after_shift #robimy pêtlê
+	sll $t4, $t4, 1 #przesuniï¿½cie i zrobienie "schodka"
+	j check_after_shift #robimy pï¿½tlï¿½
 skip_check_for_overflow:	
-	addu $t7, $t6, $t4 #dodanie kolejnej czêœci do wyniku, aby sprawdziæ przepe³nienie wynik dajemy tymczasowo do nowego rejestru
-	beq $t4, 0, skip_check_after_addition #je¿eli dodajemy 0 to na pewno nie bêdzie przepe³nienia
-	xor $t8, $t7, $t6 #wynik ujemny, gdy znaki wyniku i danych siê ró¿ni¹ (przepe³nienie wyst¹pi³o)
-	bgtz $t8, skip_check_after_addition #gdy $t8 wiêksze od zera to nie ma przepe³nienia
-	li $t9, 1 #ustawiamy przepe³nienie na prawda
+	addu $t7, $t6, $t4 #dodanie kolejnej czï¿½ci do wyniku, aby sprawdziï¿½ przepeï¿½nienie wynik dajemy tymczasowo do nowego rejestru
+	#beq $t4, 0, skip_check_after_addition #jeï¿½eli dodajemy 0 to na pewno nie bï¿½dzie przepeï¿½nienia
+	xor $t8, $t7, $t6 #wynik ujemny, gdy znaki wyniku i danych siï¿½ rï¿½niï¿½ (przepeï¿½nienie wystï¿½piï¿½o)
+	bgez  $t8, skip_check_after_addition #gdy $t8 wiï¿½ksze od zera to nie ma przepeï¿½nienia
+	li $t9, 1 #ustawiamy przepeï¿½nienie na prawda
 skip_check_after_addition:	
-	move $t6, $t7 #przenosimy wynik spowrotem do rejestru $t6 gdzie powinien siê znaleŸæ
-	sll $t2, $t2, 1 #przesuniêcie maski o 1 w lewo (rozpatrujemy kolejny bit)
-	bne $t2, $zero, loop #gdy wartoœæ maski == zero nale¿y nie wykonywaæ pêtli
+	move $t6, $t7 #przenosimy wynik spowrotem do rejestru $t6 gdzie powinien siï¿½ znaleï¿½ï¿½
+	sll $t2, $t2, 1 #przesuniï¿½cie maski o 1 w lewo (rozpatrujemy kolejny bit)
+	bne $t2, $zero, loop #gdy wartoï¿½ï¿½ maski == zero naleï¿½y nie wykonywaï¿½ pï¿½tli
 	
 	li $v0, 1 #print int
-	la $t0, wyn. #przypisujemy adres pamiêci z wyn. do $t0
+	la $t0, wyn. #przypisujemy adres pamiï¿½ci z wyn. do $t0
 	sw $t6, 0($t0) #zapis wyniku do etykiety wyn.
 	move $a0, $t6 #przeniesienie wyniku do a0
 	syscall 
