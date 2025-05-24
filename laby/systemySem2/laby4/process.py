@@ -2,7 +2,7 @@ from typing import Any
 
 
 class Process:
-    def __init__(self, virtual_memory_size : int):
+    def __init__(self, virtual_memory_size : int, size_of_sample : int):
         self.virtual_memory_size = virtual_memory_size
         self.max_number_of_frames = 1
         self.frames = []
@@ -12,6 +12,7 @@ class Process:
         self.raport_e = []
         self.halted = False
         self.all_page_faults = []
+        self.size_of_sample = size_of_sample
 
     def adjust(self, time, w) -> None:
         if self.page_faults and self.page_faults[0][0] < time - w:
@@ -30,6 +31,7 @@ class Process:
         self.raport_e = []
         self.halted = False
         self.all_page_faults = []
+        
             
 class Reference:
     def __init__(self, page_number : int, process: Process):

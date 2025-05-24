@@ -12,7 +12,8 @@ class Frames(ABC):
     
     @abstractmethod
     def init_max_number_of_frames(self, process: Process) -> None:
-        pass
+        # This method is not implemented yet. Define its behavior as needed.
+        raise NotImplementedError("The method 'init_max_number_of_frames' is not implemented for ZoneModelAllocation.")
 
 
 class EqualAllocation(Frames):
@@ -49,7 +50,7 @@ class PageFaultsAllocation(Frames):
         self.proportional = ProportionalAllocation(self.frames_in_system, self.virtual_memory_capacity)
     
     def init_max_number_of_frames(self, process: Process) -> None:
-        self.proportional.set_max_number_of_frames(process)
+        self.proportional.init_max_number_of_frames(process)
         
     def set_max_number_of_frames(self, process: Process) -> None:
         if process.halted:
@@ -83,42 +84,52 @@ class ZoneModelHaltingStrategy(ABC):
     
 
 class ZoneModelAllocation(Frames):
-    def __init__(self, frames_in_system : int, virtual_memory_capacity: int, processes: list, halting_strategy: ZoneModelHaltingStrategy) -> None:
+    def __init__(self, frames_in_system : int, processes: list, halting_strategy: ZoneModelHaltingStrategy) -> None:
         super().__init__(frames_in_system)
         self.processes = processes
         self.halting_strategy = halting_strategy
-        self.virtual_memory_capacity = virtual_memory_capacity
         
     def init_max_number_of_frames(self, process: Process) -> None:
         pass
-
-
-    def re_allocate_frames(self, processes: list, frames_to_allocate: int) -> None:
-        processes_not_halted = []
-        virtual_memory_capacity = self.virtual_memory_capacity
-        for process in processes:
-            if not process.halted:
-                processes_not_halted.append(process)
-            else: 
-                virtual_memory_capacity -= process.virtual_memory_size
-        for process in processes_not_halted:
-           process.max_number_of_frames = int(process.virtual_memory_size / virtual_memory_capacity * frames_to_allocate)
                
         
     def set_max_number_of_frames(self, process: Process) -> None:
         if process.halted:
             return
-        available_frames = self.frames_in_system - sum(p.max_number_of_frames for p in self.processes)
+        available_frames = self.calculate_available_frames()
         wss = self.calculate_WSS(process)
-        if wss - len(process.frames) <= available_frames:
+        if self.can_allocate_frames(wss, process, available_frames):
             process.max_number_of_frames = wss
         else:
-            wss = [self.calculate_WSS(p) for p in self.processes]
-            process_to_halt = self.halting_strategy.halt(wss, self.processes)
-            process_to_halt.halted = True
-            available_frames += process_to_halt.max_number_of_frames
-            process_to_halt.max_number_of_frames = 0
-            self.re_allocate_frames(self.processes, available_frames)
+            self.handle_insufficient_frames(available_frames)
+
+    def calculate_available_frames(self) -> int:
+        return self.frames_in_system - sum(p.max_number_of_frames for p in self.processes)
+
+    def can_allocate_frames(self, wss: int, process: Process, available_frames: int) -> bool:
+        return wss - len(process.frames) <= available_frames
+
+    def handle_insufficient_frames(self, available_frames: int) -> None:
+        wss = [self.calculate_WSS(p) for p in self.processes]
+        process_to_halt = self.halting_strategy.halt(wss, self.processes)
+        available_frames += process_to_halt.max_number_of_frames
+        self.halt_process(process_to_halt, available_frames)
+
+    def halt_process(self, process: Process, available_frames: int) -> None:
+        process.halted = True
+        process.max_number_of_frames = 0
+        self.re_allocate_frames(self.processes, available_frames)
+
+    def re_allocate_frames(self, processes: list, frames_to_allocate: int) -> None:
+        processes_not_halted = []
+        virtual_memory_capacity = 0
+        for process in processes:
+            if not process.halted:
+                processes_not_halted.append(process)
+                virtual_memory_capacity += process.virtual_memory_size
+
+        for process in processes_not_halted:
+           process.max_number_of_frames = int(process.virtual_memory_size / virtual_memory_capacity * frames_to_allocate)
             
     
     def calculate_WSS(self, process: Process) -> int:
