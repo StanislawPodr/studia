@@ -70,6 +70,10 @@ public class BSTTest {
         assertFalse(bst.search(10));
         assertTrue(bst.search(5));
         assertTrue(bst.search(15));
+        previous = bst.removeElement(15);
+        assertEquals(12, previous);
+        previous = bst.removeElement(18);
+        assertEquals(12, previous);
     }
 
 
@@ -97,7 +101,22 @@ public class BSTTest {
         bst.insert(18);
 
         assertEquals(12, bst.previous(15));
+        assertEquals(10, bst.previous(12));
+        assertEquals(7, bst.previous(10));
+        assertEquals(5, bst.previous(7));
+        assertEquals(3, bst.previous(5));
+        assertEquals(15, bst.previous(18));
         assertNull(bst.previous(3));
+        assertThrows(IllegalArgumentException.class, () -> bst.previous(null));
+        assertThrows(IllegalArgumentException.class, () -> bst.previous(19));
+    }
+
+     @Test
+    void testPreviousWithOneElement() {
+        BST<Integer> bst = new BST<>(Integer::compare);
+        bst.insert(5);
+
+        assertNull(bst.previous(5));
     }
 
     @Test

@@ -146,9 +146,6 @@ public class BST<T> {
             return null;
         }
 
-        if (node == parent.getRight()) {
-            return parent;
-        }
         return ancestor;
     }
 
