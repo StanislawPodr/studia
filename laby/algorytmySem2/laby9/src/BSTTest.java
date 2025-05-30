@@ -163,4 +163,72 @@ public class BSTTest {
         bst.insert(5);
         assertThrows(IllegalArgumentException.class, () -> bst.removeElement(null));
     }
+
+    @Test
+    void testMostImbalancedSubtreeEmpty() {
+        BST<Integer> bst = new BST<>(Integer::compare);
+        assertThrows(IllegalStateException.class, bst::mostImbalancedSubtree);
+    }
+
+    @Test
+    void testMostImbalancedSubtreeSingleNode() {
+        BST<Integer> bst = new BST<>(Integer::compare);
+        bst.insert(10);
+        BST<Integer> result = bst.mostImbalancedSubtree();
+        assertNotNull(result);
+        assertTrue(result.search(10));
+    }
+
+    @Test
+    void testMostImbalancedSubtreeUnbalanced() {
+        BST<Integer> bst = new BST<>(Integer::compare);
+        // Create a skewed tree
+        bst.insert(1);
+        bst.insert(2);
+        bst.insert(3);
+        bst.insert(4);
+        bst.insert(5);
+
+        BST<Integer> result = bst.mostImbalancedSubtree();
+        assertNotNull(result);
+        // This simple check ensures the subtree is still valid
+        assertTrue(result.search(3));
+    }
+
+    @Test
+    void testMostImbalancedSubtreeBalanced() {
+        BST<Integer> bst = new BST<>(Integer::compare);
+        bst.insert(4);
+        bst.insert(2);
+        bst.insert(6);
+        bst.insert(1);
+        bst.insert(3);
+        bst.insert(5);
+        bst.insert(7);
+
+        BST<Integer> result = bst.mostImbalancedSubtree();
+        assertNotNull(result);
+        // Balanced tree might return the entire tree or a correct subtree
+        // Just verify the method runs and returns a valid BST
+        assertTrue(result.search(7));
+    }
+
+    @Test
+    void testMostImbalancedSubtreeNormally() {
+        BST<Integer> bst = new BST<>(Integer::compare);
+        bst.insert(10);
+        bst.insert(5);
+        bst.insert(15);
+        bst.insert(14);
+        bst.insert(16);
+        bst.insert(8);
+        bst.insert(6);
+        bst.insert(7);
+
+        BST<Integer> result = bst.mostImbalancedSubtree();
+        assertFalse(result.search(10));
+        assertFalse(result.search(15));
+        assertTrue(result.search(5));
+        assertTrue(result.search(8));
+    }
 }
