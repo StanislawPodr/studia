@@ -18,6 +18,14 @@ public class BST<T> {
         this.comparator = comparator;
     }
 
+    private BST(Node<T> root, Comparator<T> comparator) {
+        if (comparator == null) {
+            throw new IllegalArgumentException("Comparator cannot be null");
+        }
+        this.root = root;
+        this.comparator = comparator;
+    }
+
     public void insert(T data) {
         if (data == null) {
             throw new IllegalArgumentException("Data cannot be null");
@@ -171,25 +179,24 @@ public class BST<T> {
         throw new IllegalArgumentException("Element not found in the tree");
     }
 
-
     // private NodeWithParent<T> findElementIterative(Node<T> node, T data) {
-    //     Node<T> current = root;
-    //     Node<T> parent = null;
+    // Node<T> current = root;
+    // Node<T> parent = null;
 
-    //     while (current != null) {
-    //         int comparisonResult = comparator.compare(current.getData(), data);
-    //         if (comparisonResult < 0) {
-    //             parent = current;
-    //             current = current.getRight();
-    //         } else if (comparisonResult > 0) {
-    //             parent = current;
-    //             current = current.getLeft();
-    //         } else {
-    //             return new NodeWithParent<>(current, parent);
-    //         }
-    //     }
+    // while (current != null) {
+    // int comparisonResult = comparator.compare(current.getData(), data);
+    // if (comparisonResult < 0) {
+    // parent = current;
+    // current = current.getRight();
+    // } else if (comparisonResult > 0) {
+    // parent = current;
+    // current = current.getLeft();
+    // } else {
+    // return new NodeWithParent<>(current, parent);
+    // }
+    // }
 
-    //     throw new IllegalArgumentException("Element not found in the tree");
+    // throw new IllegalArgumentException("Element not found in the tree");
     // }
 
     private Node<T> findMaximumIterative(Node<T> node) {
@@ -207,7 +214,6 @@ public class BST<T> {
         return new NodeWithParent<>(node, parent);
     }
 
-
     public T removeElement(T data) {
         if (data == null) {
             throw new IllegalArgumentException("Data cannot be null");
@@ -218,18 +224,18 @@ public class BST<T> {
         NodeWithParentAndLatestLowerAncestor<T> nodeWithParent = findElementIterativeWithLowerAncestor(root, data);
         Node<T> node = nodeWithParent.node;
         Node<T> parent = nodeWithParent.parent;
-        T result = previous(node, parent, nodeWithParent.latestLowerAncestor).getData();
+        Node<T> result = previous(node, parent, nodeWithParent.latestLowerAncestor);
         if (node.hasLeft() && node.hasRight()) {
             NodeWithParent<T> successor = findMinimumWithParentIterative(node.getRight(), node);
             T successorData = successor.node.getData();
             node.setData(successorData);
             node = successor.node;
             parent = successor.parent;
-        } 
+        }
 
         removeWithMaxOneChild(node, parent);
 
-        return result;
+        return result != null ? result.getData() : null;
     }
 
     private void removeWithMaxOneChild(Node<T> node, Node<T> parent) {
@@ -249,7 +255,7 @@ public class BST<T> {
             } else {
                 parent.setRight(node.getLeft());
             }
-        } else  {
+        } else {
             if (parent == null) {
                 root = node.getRight();
             } else if (parent.getLeft() == node) {
@@ -258,6 +264,69 @@ public class BST<T> {
                 parent.setRight(node.getRight());
             }
         }
+    }
+
+    public BST<T> copy() {
+        if (root == null) {
+            return new BST<>(null, this.comparator);
+        }
+        return new BST<>(copy(root), this.comparator);
+    }
+
+    private Node<T> copy(Node<T> node) {
+        if (node == null) {
+            return null;
+        }
+        Node<T> newNode = new Node<>(node.getData());
+        newNode.setLeft(copy(node.getLeft()));
+        newNode.setRight(copy(node.getRight()));
+        return newNode;
+    }
+
+    public BST<T> mostImbalancedSubtree() {
+        if (root == null) {
+            throw new IllegalStateException("Tree is empty");
+        }
+        return new BST<>(copy(mostImbalancedSubtree(root).mostImbalancedSubtree.tree), this.comparator);
+    }
+
+    private record BSTSubtree<T>(int height, Node<T> subtree,
+            ImbalancedSubtree<T> mostImbalancedSubtree) {
+    }
+
+    private record ImbalancedSubtree<T>(int difference, Node<T> tree) {
+    }
+
+    private BSTSubtree<T> mostImbalancedSubtree(Node<T> node) {
+        if (node == null) {
+            return new BSTSubtree<>(0, node, null);
+        }
+
+        BSTSubtree<T> leftSubtree = mostImbalancedSubtree(node.getLeft());
+        BSTSubtree<T> rightSubtree = mostImbalancedSubtree(node.getRight());
+        int heightDifference = Math.abs(leftSubtree.height - rightSubtree.height);
+        int leftMostImbalanced = leftSubtree.mostImbalancedSubtree != null
+                ? leftSubtree.mostImbalancedSubtree.difference
+                : 0;
+        int rightMostImbalanced = rightSubtree.mostImbalancedSubtree != null
+                ? rightSubtree.mostImbalancedSubtree.difference
+                : 0;
+        ImbalancedSubtree<T> imbalancedSubtree;
+        int maxDIfference;
+        if(leftMostImbalanced > rightMostImbalanced) {
+            imbalancedSubtree = leftSubtree.mostImbalancedSubtree;
+            maxDIfference = leftMostImbalanced;
+        } else {
+            imbalancedSubtree = rightSubtree.mostImbalancedSubtree;
+            maxDIfference = rightMostImbalanced;
+        }
+
+        if (heightDifference > maxDIfference || imbalancedSubtree == null) {
+            imbalancedSubtree = new ImbalancedSubtree<>(heightDifference, node);
+        }
+
+        return new BSTSubtree<>(Math.max(leftSubtree.height, rightSubtree.height) + 1, node,
+                imbalancedSubtree);
     }
 
 }
