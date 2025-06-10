@@ -183,27 +183,23 @@ public class TrieDictionary<V> {
         TrieNode<V> foundNode = null;
         Stack<TrieNode<V>> stack = new Stack<>();
         stack.push(root);
-        while (foundNode == null && node != null && current_char_index < key.length()) {
+        while (foundNode == null && node != null) {
             if (node.character == key.charAt(current_char_index)) {
                 current_char_index++;
                 if (current_char_index == key.length()) {
                     foundNode = node;
-                    stack.push(node);
-                } else {
-                    if (node.hasValue()) {
-                        stack.clear();
-                    }
-                    stack.push(node);
-                    node = node.child;
+                } else if (node.hasValue()) {
+                    stack.clear();
                 }
-
+                stack.push(node);
+                node = node.child;
             } else if (node.character > key.charAt(current_char_index)) {
                 return null;
             } else {
                 node = node.next;
             }
         }
-        if (foundNode == null || node == null) {
+        if (foundNode == null) {
             return null;
         }
         return stack;
