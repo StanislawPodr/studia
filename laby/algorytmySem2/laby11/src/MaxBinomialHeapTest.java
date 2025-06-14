@@ -94,4 +94,29 @@ public class MaxBinomialHeapTest {
         assertEquals("Max should be 15 after extracting max", Integer.valueOf(15), heap1.extractMax());
         assertEquals("Max should be 10 after extracting max", Integer.valueOf(10), heap1.extractMax());
     }
+
+    @Test
+    public void testMergingAfterExtractingMax() {
+        MaxBinomialHeap<Integer> heap1 = new MaxBinomialHeap<>(Comparator.naturalOrder());
+        heap1.insert(10);
+        heap1.insert(20);
+        heap1.insert(30);
+        heap1.insert(40);
+        Integer max1 = heap1.extractMax();
+        assertEquals("Max should be 40 before merging", Integer.valueOf(40), max1);
+        MaxBinomialHeap<Integer> heap2 = new MaxBinomialHeap<>(Comparator.naturalOrder());
+        heap2.insert(50);
+        heap2.insert(60);
+        heap1.merge(heap2);
+        assertEquals("Max should be 60 after merging", Integer.valueOf(60), heap1.findMax());
+    }
+
+    @Test
+    public void testFindMaxAfterMultipleInsertions() {
+        MaxBinomialHeap<Integer> heap = new MaxBinomialHeap<>(Comparator.naturalOrder());
+        for (int i = 1; i <= 50; i++) {
+            heap.insert(i * 2);
+        }
+        assertEquals("Max should be 100 after inserting 50 elements", Integer.valueOf(100), heap.findMax());
+    }
 }

@@ -69,12 +69,15 @@ public class MaxBinomialHeap<T> {
         if (other.firstNode == null) {
             return;
         }
-
         if (firstNode == null) {
             firstNode = other.firstNode;
             return;
         }
         joinHeaps(other);
+        mergeTreesInHeap();
+    }
+
+    private void mergeTreesInHeap() {
         BinomialTree current = firstNode;
         BinomialTree prev = null;
         while (current.hasNext()) {
@@ -102,6 +105,12 @@ public class MaxBinomialHeap<T> {
     private void joinHeaps(MaxBinomialHeap<T> other) {
         BinomialTree thisIterator = firstNode;
         BinomialTree otherIterator = other.firstNode;
+        if (otherIterator.degree <= firstNode.degree) {
+            BinomialTree nextOther = otherIterator.next;
+            push(otherIterator);
+            otherIterator = nextOther;
+            thisIterator = firstNode;
+        }
         while (thisIterator.hasNext() && otherIterator != null) {
             while (thisIterator.hasNext() && thisIterator.next.degree < otherIterator.degree) {
                 thisIterator = thisIterator.next;
