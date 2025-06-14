@@ -66,4 +66,32 @@ public class MaxBinomialHeapTest {
         assertEquals("Max should be 30 before removing max", Integer.valueOf(30), heap.extractMax());
         assertEquals("Max should be 20 after removing max", Integer.valueOf(20), heap.findMax());
     }
+
+    @Test
+    public void testMultipleInsertions() {
+        MaxBinomialHeap<Integer> heap = new MaxBinomialHeap<>(Comparator.naturalOrder());
+        for (int i = 1; i <= 100; i++) {
+            heap.insert(i);
+        }
+        assertEquals("Max should be 100 after inserting 100 elements", Integer.valueOf(100), heap.findMax());
+    }
+
+    @Test
+    public void testMergeWithSameSizedHeaps() {
+        MaxBinomialHeap<Integer> heap1 = new MaxBinomialHeap<>(Comparator.naturalOrder());
+        heap1.insert(10);
+        heap1.insert(20);
+        heap1.insert(30);
+        MaxBinomialHeap<Integer> heap2 = new MaxBinomialHeap<>(Comparator.naturalOrder());
+        heap2.insert(15);
+        heap2.insert(25);
+        heap2.insert(35);
+        heap1.merge(heap2);
+        assertEquals("Max should be 35 after merging heaps of same size", Integer.valueOf(35), heap1.extractMax());
+        assertEquals("Max should be 30 after extracting max", Integer.valueOf(30), heap1.extractMax());
+        assertEquals("Max should be 25 after extracting max", Integer.valueOf(25), heap1.extractMax());
+        assertEquals("Max should be 20 after extracting max", Integer.valueOf(20), heap1.extractMax());
+        assertEquals("Max should be 15 after extracting max", Integer.valueOf(15), heap1.extractMax());
+        assertEquals("Max should be 10 after extracting max", Integer.valueOf(10), heap1.extractMax());
+    }
 }

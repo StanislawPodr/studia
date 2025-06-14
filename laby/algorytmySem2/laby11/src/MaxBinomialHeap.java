@@ -79,6 +79,10 @@ public class MaxBinomialHeap<T> {
         BinomialTree prev = null;
         while (current.hasNext()) {
             if (current.degree == current.next.degree) {
+                if (current.next.hasNext() && current.degree == current.next.next.degree) {
+                    prev = current;
+                    current = current.next;
+                }
                 BinomialTree nextCurrent = current.next.next;
                 BinomialTree mergedTree = current.mergeTree(current.next);
                 if (prev == null) {
@@ -144,6 +148,7 @@ public class MaxBinomialHeap<T> {
             if (comparator.compare(tree.value, max.value) > 0) {
                 max = tree;
             }
+            iterator = tree;
         }
         return max;
     }
