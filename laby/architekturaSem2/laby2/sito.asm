@@ -1,21 +1,21 @@
 .data
-N:		.word		404		#N=100
-numall:		.space		404
-primes:		.space		404
+N:		.word		400		#N=100
+numall:		.space		400
+primes:		.space		400
 
 .text
-#Pocz¹tek programu, alokacja danych
+#Poczï¿½tek programu, alokacja danych
 	la	$s2,	N
-	lw	$s2,	($s2)			#iloœæ bajtów
+	lw	$s2,	($s2)			#iloï¿½ï¿½ bajtï¿½w
 	la	$s0,	numall			#adres tablicy do algorytmu
-	li	$t0,	8			#o ile mamy skakaæ (pierwsza liczba pierwsza x4)
+	li	$t0,	8			#o ile mamy skakaï¿½ (pierwsza liczba pierwsza x4)
 	add	$s1,	$s2,	$s0	
 	
 	
 
 	move	$t1,	$s0			#ustawiamy iterator
-	li	$t2,	1			#³adujemy index dla liczb naturalnych
-table_association:				#uzupe³nianie tablicy
+	li	$t2,	1			#ï¿½adujemy index dla liczb naturalnych
+table_association:				#uzupeï¿½nianie tablicy
 	sw	$t2,	($t1)
 	addi	$t1,	$t1,	4
 	addi	$t2,	$t2,	1	
@@ -23,26 +23,33 @@ table_association:				#uzupe³nianie tablicy
 	
 			
 						
-	addi	$s0,	$s0,	-4		#nasza tablica jest ($s0 - $s1). Dla u³atwienia, mo¿naby teoretycznie u¿ywaæ offsetu dla mniejszej liczby instrukcji
-	sw	$zero,	4($s0)			#jedynka nie jest liczb¹ pierwsz¹
-#pêtla znajduj¹ca liczby pierwsze
+	addi	$s0,	$s0,	-4		#nasza tablica jest ($s0 - $s1). Dla uï¿½atwienia, moï¿½naby teoretycznie uï¿½ywaï¿½ offsetu dla mniejszej liczby instrukcji
+	sw	$zero,	4($s0)			#jedynka nie jest liczbï¿½ pierwszï¿½
+#pï¿½tla znajdujï¿½ca liczby pierwsze
+
+	# $t0 -> liczba pierwsza x4
+	# $t1 -> iterator do szukania wielokrotnoÅ›ci liczb pierwszych
+	# $t2 -> iterator do szukania kolejnej liczby pierwszej
+	# $t3 -> zmienna pomocnicza (do przechowywania wyniku mnoÅ¼enia i wartoÅ›ci spod zadanego adresu)
 next_prime:
-	move	$t1,	$s0			#ustawiamy iterator tablicy na jej pocz¹tek
-	add	$t1,	$t1,	$t0		#ustawiamy na nasz¹ liczbê pierwsz¹ (któr¹ chcemy pomin¹æ)
-	move	$t2,	$t1			#zapisujemy na szukanie kolejnej liczby pierwszej
+	move	$t1,	$s0			#ustawiamy iterator tablicy na jej poczï¿½tek
+	add	$t2,	$t1, 	$t0		#zapisujemy na szukanie kolejnej liczby pierwszej
+	mul	$t3,	$t0,	$t0	
+	srl	$t3,	$t3,	2		# jak t_0 to przesuniÄ™cie adresu wiÄ™c jest nx4. Jak podnosimy do kwadratu to musimy potem podzieliÄ‡ na 4
+	add	$t1,	$t1,	$t3		# zaczynamy od liczby pierwszej n^2 numeru w tablicy
 	eliminate_multiple:
-		add	$t1,	$t1,	$t0		#wykonujemy przesuniêcie o nasz¹ liczbê pierwsz¹ x 4
-		bge	$t1,	$s1,	find_prime	#jak wyszliœmy z tablicy to skaczemy
-		sw	$zero,	($t1)			#zapisujemy do tablicy 0, co oznacza, ¿e ten element nie bêdzie liczb¹ pierwsz¹
+		bgt	$t1,	$s1,	find_prime	#jak wyszliï¿½my z tablicy to skaczemy
+		sw	$zero,	($t1)			#zapisujemy do tablicy 0, co oznacza, ï¿½e ten element nie bï¿½dzie liczbï¿½ pierwszï¿½
+		add	$t1,	$t1,	$t0		#wykonujemy przesuniï¿½cie o naszï¿½ liczbï¿½ pierwszï¿½ x 4
 		j eliminate_multiple
 		
 	find_prime:
-		addi	$t2,	$t2,	4			#inkrementujemy po tablicy w poszukiwaniu liczby ró¿nej od 0
-		beq	$t2,	$s1, 	prime_not_found #je¿eli wyszliœmy z zakresu (nie ma wiêcej liczb pierwszych)
+		addi	$t2,	$t2,	4			#inkrementujemy po tablicy w poszukiwaniu liczby rï¿½nej od 0
+		bge 	$t2,	$s1, 	prime_not_found #jeï¿½eli wyszliï¿½my z zakresu (nie ma wiï¿½cej liczb pierwszych)
 		lw	$t3,	($t2)
-		beq  	$t3,	$zero,	find_prime	#je¿eli liczba jest 0 to musimy iœæ dalej po tablicy
+		beq  	$t3,	$zero,	find_prime	#jeï¿½eli liczba jest 0 to musimy iï¿½ï¿½ dalej po tablicy
 	sub	$t0,	$t2,	$s0
-	j next_prime					#znaleziona liczba pierwsza wiêc mo¿na powtórzyæ
+	j next_prime					#znaleziona liczba pierwsza wiï¿½c moï¿½na powtï¿½rzyï¿½
 
 prime_not_found:
 
@@ -52,12 +59,12 @@ add_primes:
 	addi	$t1,	$t1,	4
 	beq	$t1,	$s1,	end
 	lw	$t2,	($t1)
-	bne	$t2,	$zero,	prime
-	la	$ra,	comeback
-comeback:
+	beq 	$t2,	$zero,	not_prime
+	sw	$t2,	($t0)
+	addi	$t0,	$t0,	4
+not_prime:
 	j	add_primes
 	
-
 end:
 	li	$v0, 	10          		# terminate program
 	syscall
@@ -65,13 +72,6 @@ end:
 	
 	
 	
-
-
-
-prime:
-	sw	$t2,	($t0)
-	addi	$t0,	$t0,	4
-	jr	$ra
 	
 	
 	
