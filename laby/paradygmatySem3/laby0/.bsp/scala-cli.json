@@ -1,0 +1,20 @@
+{
+  "name": "scala-cli",
+  "argv": [
+    "/home/stanislaw/.local/share/coursier/bin/.scala-cli.aux",
+    "bsp",
+    "--json-options",
+    "/home/stanislaw/projects/studia/laby/paradygmatySem3/laby0/.scala-build/ide-options-v2.json",
+    "--json-launcher-options",
+    "/home/stanislaw/projects/studia/laby/paradygmatySem3/laby0/.scala-build/ide-launcher-options.json",
+    "--envs-file",
+    "/home/stanislaw/projects/studia/laby/paradygmatySem3/laby0/.scala-build/ide-envs.json",
+    "/home/stanislaw/projects/studia/laby/paradygmatySem3/laby0/hello.scala"
+  ],
+  "version": "1.9.1",
+  "bspVersion": "2.1.1",
+  "languages": [
+    "scala",
+    "java"
+  ]
+}
