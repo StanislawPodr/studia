@@ -9,7 +9,7 @@
 *.war
 *.zip
 
-# Konfiguracja IDE
+# Konfiguracja IDE:
 .idea/
 *.iml
 .vscode/

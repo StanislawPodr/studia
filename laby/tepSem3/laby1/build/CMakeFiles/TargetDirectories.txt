@@ -1,0 +1,7 @@
+/home/stanislaw/studia/laby/tepSem3/laby1/build/CMakeFiles/main.dir
+/home/stanislaw/studia/laby/tepSem3/laby1/build/CMakeFiles/edit_cache.dir
+/home/stanislaw/studia/laby/tepSem3/laby1/build/CMakeFiles/rebuild_cache.dir
+/home/stanislaw/studia/laby/tepSem3/laby1/build/lib/CMakeFiles/allocator.dir
+/home/stanislaw/studia/laby/tepSem3/laby1/build/lib/CMakeFiles/table.dir
+/home/stanislaw/studia/laby/tepSem3/laby1/build/lib/CMakeFiles/edit_cache.dir
+/home/stanislaw/studia/laby/tepSem3/laby1/build/lib/CMakeFiles/rebuild_cache.dir
