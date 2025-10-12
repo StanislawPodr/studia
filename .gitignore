@@ -8,6 +8,14 @@
 *.jar
 *.war
 *.zip
+*.o
+*.a
+*.so
+.scala-build/
+.bsp/
+build/
+*.cmi
+*.cmx
 
 # Konfiguracja IDE:
 .idea/
@@ -21,3 +29,8 @@ Thumbs.db
 # Logi i pliki tymczasowe
 logs/
 tmp/
+CMakeFiles/
+cmake_install.cmake
+CMakeCache.txt
+.scala-build/
+.bsp/

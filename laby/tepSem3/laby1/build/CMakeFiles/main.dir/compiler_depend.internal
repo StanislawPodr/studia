@@ -4,9 +4,11 @@
 CMakeFiles/main.dir/main.cpp.o
  /home/stanislaw/studia/laby/tepSem3/laby1/main.cpp
  /home/stanislaw/studia/laby/tepSem3/laby1/lib/include/allocator.h
+ /home/stanislaw/studia/laby/tepSem3/laby1/lib/include/table.h
  /usr/include/alloca.h
  /usr/include/asm-generic/errno-base.h
  /usr/include/asm-generic/errno.h
+ /usr/include/assert.h
  /usr/include/c++/13/backward/binders.h
  /usr/include/c++/13/bits/alloc_traits.h
  /usr/include/c++/13/bits/allocator.h
@@ -58,6 +60,7 @@ CMakeFiles/main.dir/main.cpp.o
  /usr/include/c++/13/bits/streambuf_iterator.h
  /usr/include/c++/13/bits/stringfwd.h
  /usr/include/c++/13/bits/utility.h
+ /usr/include/c++/13/cassert
  /usr/include/c++/13/cctype
  /usr/include/c++/13/cerrno
  /usr/include/c++/13/clocale

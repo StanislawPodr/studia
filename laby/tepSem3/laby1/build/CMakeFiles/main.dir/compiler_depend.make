@@ -3,9 +3,11 @@
 
 CMakeFiles/main.dir/main.cpp.o: /home/stanislaw/studia/laby/tepSem3/laby1/main.cpp \
   /home/stanislaw/studia/laby/tepSem3/laby1/lib/include/allocator.h \
+  /home/stanislaw/studia/laby/tepSem3/laby1/lib/include/table.h \
   /usr/include/alloca.h \
   /usr/include/asm-generic/errno-base.h \
   /usr/include/asm-generic/errno.h \
+  /usr/include/assert.h \
   /usr/include/c++/13/backward/binders.h \
   /usr/include/c++/13/bits/alloc_traits.h \
   /usr/include/c++/13/bits/allocator.h \
@@ -57,6 +59,7 @@ CMakeFiles/main.dir/main.cpp.o: /home/stanislaw/studia/laby/tepSem3/laby1/main.c
   /usr/include/c++/13/bits/streambuf_iterator.h \
   /usr/include/c++/13/bits/stringfwd.h \
   /usr/include/c++/13/bits/utility.h \
+  /usr/include/c++/13/cassert \
   /usr/include/c++/13/cctype \
   /usr/include/c++/13/cerrno \
   /usr/include/c++/13/clocale \
@@ -246,7 +249,13 @@ CMakeFiles/main.dir/main.cpp.o: /home/stanislaw/studia/laby/tepSem3/laby1/main.c
 
 /usr/include/x86_64-linux-gnu/bits/timex.h:
 
+/usr/include/x86_64-linux-gnu/bits/timesize.h:
+
+/usr/include/x86_64-linux-gnu/bits/time.h:
+
 /usr/include/c++/13/bits/move.h:
+
+/usr/include/c++/13/cassert:
 
 /usr/include/c++/13/bits/stl_construct.h:
 
@@ -272,19 +281,13 @@ CMakeFiles/main.dir/main.cpp.o: /home/stanislaw/studia/laby/tepSem3/laby1/main.c
 
 /usr/include/x86_64-linux-gnu/bits/cpu-set.h:
 
-/usr/include/x86_64-linux-gnu/c++/13/bits/os_defines.h:
+/usr/include/c++/13/bits/locale_classes.tcc:
 
-/usr/include/x86_64-linux-gnu/c++/13/bits/c++locale.h:
+/usr/include/c++/13/bits/allocator.h:
 
-/usr/include/c++/13/bits/ptr_traits.h:
+/usr/include/c++/13/bits/locale_classes.h:
 
-/usr/include/c++/13/bits/basic_string.tcc:
-
-/usr/include/alloca.h:
-
-/usr/include/c++/13/bits/stl_iterator_base_types.h:
-
-/usr/include/x86_64-linux-gnu/bits/sched.h:
+/usr/include/ctype.h:
 
 /usr/include/x86_64-linux-gnu/bits/types/clock_t.h:
 
@@ -298,19 +301,19 @@ CMakeFiles/main.dir/main.cpp.o: /home/stanislaw/studia/laby/tepSem3/laby1/main.c
 
 /usr/include/wchar.h:
 
+/home/stanislaw/studia/laby/tepSem3/laby1/lib/include/table.h:
+
+/usr/include/x86_64-linux-gnu/bits/time64.h:
+
+/usr/include/c++/13/bits/basic_ios.h:
+
 /usr/include/x86_64-linux-gnu/bits/struct_rwlock.h:
 
 /usr/include/c++/13/bits/ostream.tcc:
 
-/usr/include/x86_64-linux-gnu/bits/timesize.h:
-
 /usr/include/x86_64-linux-gnu/c++/13/bits/c++config.h:
 
 /usr/include/c++/13/bits/ios_base.h:
-
-/usr/include/c++/13/bits/locale_classes.tcc:
-
-/usr/include/c++/13/bits/allocator.h:
 
 /usr/include/c++/13/bits/locale_facets.tcc:
 
@@ -321,6 +324,12 @@ CMakeFiles/main.dir/main.cpp.o: /home/stanislaw/studia/laby/tepSem3/laby1/main.c
 /usr/include/c++/13/backward/binders.h:
 
 /usr/include/c++/13/bits/stringfwd.h:
+
+/usr/include/assert.h:
+
+/usr/include/c++/13/bits/hash_bytes.h:
+
+/usr/include/asm-generic/errno-base.h:
 
 /usr/include/c++/13/cwctype:
 
@@ -334,11 +343,9 @@ CMakeFiles/main.dir/main.cpp.o: /home/stanislaw/studia/laby/tepSem3/laby1/main.c
 
 /usr/include/c++/13/cwchar:
 
-/usr/include/c++/13/clocale:
+/usr/include/alloca.h:
 
-/usr/include/asm-generic/errno-base.h:
-
-/usr/include/c++/13/bits/hash_bytes.h:
+/usr/include/c++/13/bits/basic_string.tcc:
 
 /home/stanislaw/studia/laby/tepSem3/laby1/lib/include/allocator.h:
 
@@ -353,6 +360,16 @@ CMakeFiles/main.dir/main.cpp.o: /home/stanislaw/studia/laby/tepSem3/laby1/main.c
 /usr/include/x86_64-linux-gnu/bits/stdlib-float.h:
 
 /usr/include/c++/13/bits/invoke.h:
+
+/usr/include/x86_64-linux-gnu/c++/13/bits/os_defines.h:
+
+/usr/include/x86_64-linux-gnu/c++/13/bits/c++locale.h:
+
+/usr/include/c++/13/bits/ptr_traits.h:
+
+/usr/include/c++/13/bits/stl_iterator_base_types.h:
+
+/usr/include/x86_64-linux-gnu/bits/sched.h:
 
 /usr/include/c++/13/bits/localefwd.h:
 
@@ -369,12 +386,6 @@ CMakeFiles/main.dir/main.cpp.o: /home/stanislaw/studia/laby/tepSem3/laby1/main.c
 /usr/include/c++/13/type_traits:
 
 /usr/include/c++/13/bits/cxxabi_forced.h:
-
-/usr/include/x86_64-linux-gnu/bits/types/mbstate_t.h:
-
-/usr/include/c++/13/cerrno:
-
-/usr/include/stdio.h:
 
 /usr/include/c++/13/string:
 
@@ -396,9 +407,13 @@ CMakeFiles/main.dir/main.cpp.o: /home/stanislaw/studia/laby/tepSem3/laby1/main.c
 
 /usr/include/c++/13/ios:
 
-/usr/include/c++/13/bits/locale_classes.h:
+/usr/include/x86_64-linux-gnu/bits/types/mbstate_t.h:
 
-/usr/include/ctype.h:
+/usr/include/c++/13/cerrno:
+
+/usr/include/stdio.h:
+
+/usr/include/c++/13/clocale:
 
 /usr/include/x86_64-linux-gnu/bits/types/struct_timespec.h:
 
@@ -533,9 +548,3 @@ CMakeFiles/main.dir/main.cpp.o: /home/stanislaw/studia/laby/tepSem3/laby1/main.c
 /usr/include/c++/13/bits/cpp_type_traits.h:
 
 /usr/include/x86_64-linux-gnu/bits/stdint-intn.h:
-
-/usr/include/x86_64-linux-gnu/bits/time.h:
-
-/usr/include/c++/13/bits/basic_ios.h:
-
-/usr/include/x86_64-linux-gnu/bits/time64.h:
