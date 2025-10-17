@@ -9,6 +9,9 @@ class Table
     void init(std::string name, std::size_t tableLen);
     int *copyTable(std::size_t size, int *table);
     Table(std::string name, std::size_t size, int *table);
+    void copyOne(std::size_t size, int *dest, int *from);
+    std::string name;
+    int *table;
 
 public:
     Table();
@@ -18,6 +21,9 @@ public:
     void setName(std::string name);
     bool setNewSize(std::size_t newLen);
     Table *getClone();
-    int *table;
-    std::string name;
+    void insertHere(Table &tab, int index);
+    void printTable();
+    std::string getName();
+    void setIndex(int index, int data);
+    int getIndex(int index);
 };
