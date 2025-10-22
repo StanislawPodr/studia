@@ -16,7 +16,7 @@ public:
     ~BigInteger();
     BigInteger(int value);
     BigInteger(BigInteger &other);
-    void operator=(const int value);
+    void operator=(int value);
     void operator=(BigInteger &other);
     std::string toString();
 };

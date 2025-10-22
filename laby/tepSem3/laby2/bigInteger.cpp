@@ -10,7 +10,7 @@ unsigned int BigInteger::numOfDigits(int value)
         numOfDigits++;
         value /= NUMERIC_SYSTEM;
     } while (value != 0);
-    return value;
+    return numOfDigits;
 }
 
 BigInteger::BigInteger()
@@ -46,6 +46,8 @@ int *BigInteger::getDigitsAsTable(unsigned int value, unsigned int numberOfDigit
         digits[currentDigitIndex--] = value % NUMERIC_SYSTEM;
         value /= NUMERIC_SYSTEM;
     }
+
+    return digits;
 }
 
 void BigInteger::initWithValue(int value)
@@ -88,4 +90,6 @@ std::string BigInteger::toString()
     result += this->isNegative ? "-" : "+";
     for (int i = 0; i < this->numberOfDigits; i++)
         result += std::to_string(this->digits[i]);
+
+    return result;
 }
