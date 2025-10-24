@@ -10,6 +10,8 @@ class BigInteger
     static int *getDigitsAsTable(unsigned int value, unsigned int numberOfDigits);
     void initWithValue(int value);
     void copyObject(BigInteger &other);
+    void borrow(int *ptr);
+    BigInteger(int *digits, bool isNegative, std::size_t numberOfDigits);
 
 public:
     BigInteger();
@@ -18,5 +20,7 @@ public:
     BigInteger(BigInteger &other);
     void operator=(int value);
     void operator=(BigInteger &other);
+    BigInteger operator+(BigInteger &other);
+    BigInteger operator-(BigInteger &other);
     std::string toString();
 };

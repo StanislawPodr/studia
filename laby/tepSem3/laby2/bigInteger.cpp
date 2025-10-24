@@ -93,3 +93,110 @@ std::string BigInteger::toString()
 
     return result;
 }
+
+BigInteger::BigInteger(int *digits, bool isNegative, std::size_t numberOfDigits)
+{
+    this->digits = digits;
+    this->isNegative = isNegative;
+    this->numberOfDigits = numberOfDigits;
+}
+
+BigInteger BigInteger::operator+(BigInteger &other)
+{
+    BigInteger *max, *min;
+    if (this->numberOfDigits > other.numberOfDigits)
+    {
+        max = this;
+        min = &other;
+    }
+    else
+    {
+        min = this;
+        max = &other;
+    }
+    int maxDigits = max->numberOfDigits;
+    int minDigits = min->numberOfDigits;
+
+    int *sum = new int[maxDigits + 1];
+
+    int accu = 0;
+    for (int i = maxDigits - 1; i >= maxDigits - minDigits; i--)
+    {
+        int adder = max->digits[i] + min->digits[i - maxDigits + minDigits] + accu;
+        sum[i + 1] = adder % NUMERIC_SYSTEM;
+        accu = adder / NUMERIC_SYSTEM; // dodawanie od prawej
+    }
+
+    int index = maxDigits - minDigits;
+    while (--index >= 0)
+    {
+        sum[index + 1] = (max->digits[index] + accu) % NUMERIC_SYSTEM;
+        accu = (max->digits[index] + accu) / NUMERIC_SYSTEM;
+    }
+    sum[0] = accu;
+
+    int sizeOfSum = accu ? maxDigits + 1 : maxDigits;
+    if (accu)
+        return BigInteger(sum, isNegative, sizeOfSum);
+
+    memmove(sum, sum + 1, sizeOfSum * sizeof(int));
+
+    bool isNegative = false; // to be implemented
+    return BigInteger(sum, isNegative, sizeOfSum);
+}
+
+void BigInteger::borrow(int *current)
+{
+    int *position = current;
+    while (*--position == 0)
+        ;
+    (*position)--;
+
+    while (++position < current)
+        *position += NUMERIC_SYSTEM - 1;
+
+    *position += NUMERIC_SYSTEM;
+}
+
+BigInteger BigInteger::operator-(BigInteger &other)
+{
+    BigInteger *max, *min;
+    if (this->numberOfDigits > other.numberOfDigits ||
+        (this->numberOfDigits == other.numberOfDigits && memcmp(this->digits, other.digits, this->numberOfDigits * sizeof(int)) > 0))
+    // tylko pierwszy bajt jest zapełniony (zadziała i w little i big-endian)
+    {
+        max = this;
+        min = &other;
+    }
+    else
+    {
+        min = this;
+        max = &other;
+    }
+    int maxDigits = max->numberOfDigits;
+    int minDigits = min->numberOfDigits;
+
+    int *diff = new int[maxDigits];
+    memcpy(diff, max->digits, maxDigits * sizeof(int));
+
+    for (int i = maxDigits - 1; i >= maxDigits - minDigits; i--)
+    {
+        int difference = diff[i] - min->digits[i - maxDigits + minDigits];
+        if (difference < 0)
+        {
+            borrow(diff + i);
+            difference += NUMERIC_SYSTEM;
+        }
+
+        diff[i] = difference;
+    }
+
+    int *diffPtr = diff;
+    std::size_t zerosCounter = 0;
+    while(diffPtr < diff + maxDigits && *diffPtr++ == 0)
+        zerosCounter++;
+
+    std::size_t diffNumOfDigits = zerosCounter == maxDigits ? 1 : maxDigits - zerosCounter;
+    memmove(diff, diff + zerosCounter, diffNumOfDigits);
+    return BigInteger(diff, false, diffNumOfDigits);
+}
