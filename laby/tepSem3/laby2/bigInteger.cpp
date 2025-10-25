@@ -207,7 +207,7 @@ BigInteger BigInteger::operator*(BigInteger &other)
 
 BigInteger BigInteger::operator/(BigInteger &other)
 {
-    if(this->isZero())
+    if (this->isZero())
     {
         return BigInteger{};
     }
@@ -266,9 +266,13 @@ BigInteger BigInteger::orderMultPositive(BigInteger &max, BigInteger &min, bool 
     for (BigInteger i{1}, inc{1}; bigIntegerCmp(i, min) < 0;)
     {
         std::size_t size;
-        i.digits = addSmallToBig(size, &i, &inc);
+        int *temp = addSmallToBig(size, &i, &inc);
+        delete[] i.digits;
+        i.digits = temp;
         i.numberOfDigits = size;
-        result.digits = addSmallToBig(size, &result, &max);
+        temp = addSmallToBig(size, &result, &max);
+        delete[] result.digits;
+        result.digits = temp;
         result.numberOfDigits = size;
     }
     result.isNegative = isResNegative;
@@ -285,15 +289,21 @@ BigInteger BigInteger::dividePositive(BigInteger dividend, BigInteger &divisor, 
     while ((comp = bigIntegerCmp(dividend, divisor)) > 0)
     {
         std::size_t size;
-        dividend.digits = substractFromBigger(size, &dividend, &divisor);
+        int *temp = substractFromBigger(size, &dividend, &divisor);
+        delete[] dividend.digits;
+        dividend.digits = temp;
         dividend.numberOfDigits = size;
-        result.digits = addSmallToBig(size, &result, &iter);
+        temp = addSmallToBig(size, &result, &iter);
+        delete[] result.digits;
+        result.digits = temp;
         result.numberOfDigits = size;
     }
     if (comp == 0)
     {
         std::size_t size;
-        result.digits = addSmallToBig(size, &result, &iter);
+        int *temp = addSmallToBig(size, &result, &iter);
+        delete[] result.digits;
+        result.digits = temp;
         result.numberOfDigits = size;
     }
     result.isNegative = isResNegative;
