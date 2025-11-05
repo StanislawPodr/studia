@@ -41,5 +41,6 @@ int main()
     assert(((integer1 = 0) / (integer2 = -666)).toString() == "+0");
     assert(((integer1 = -2137) / (integer2 = 0)).toString() == "+0");
     assert(((integer1 = 333) / (integer2 = 3)).toString() == "+111");
+    assert(((integer1 = 9979) + (integer2 = 8457)).toString() == "+18436");
     return 0;
 }

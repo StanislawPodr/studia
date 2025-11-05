@@ -8,6 +8,7 @@ frame1 <- data.frame(Imie, Plec, Analiza, Algebra) #pierwsza ramka
 frame1[1:2,]
 str(frame1)
 avgGrade <- sum(frame1$Analiza) / length(frame1$Analiza)
+meanGrade <- mean(frame$Analiza)
 frame1$avgGrades <- (frame1$Analiza + frame1$Algebra) / 2
 frameKobiety <- frame1[frame1$Plec == "k",]
 frameDobreOceny <- frame1[frame1$Analiza >= 4.5 | frame1$Algebra>=4.5,]
