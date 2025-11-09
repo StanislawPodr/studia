@@ -42,5 +42,18 @@ int main()
     assert(((integer1 = -2137) / (integer2 = 0)).toString() == "+0");
     assert(((integer1 = 333) / (integer2 = 3)).toString() == "+111");
     assert(((integer1 = 9979) + (integer2 = 8457)).toString() == "+18436");
+    assert((integer1 = 9979).toString() == "+9979" && integer1++.toString() == "+9979" && integer1.toString() == "+9980");
+    assert((integer1 = 0).toString() == "+0" && integer1++.toString() == "+0" && integer1.toString() == "+1");
+    assert((integer1 = -1).toString() == "-1" && integer1++.toString() == "-1" && integer1.toString() == "+0");
+    assert((integer1 = 0).toString() == "+0" && (++integer1).toString() == "+1" && integer1.toString() == "+1");
+    assert((integer1 = -1).toString() == "-1" && (++integer1).toString() == "+0" && integer1.toString() == "+0");
+    assert((integer1 = 9979).toString() == "+9979" && (++integer1).toString() == "+9980" && integer1.toString() == "+9980");
+    assert((integer1 = 9979).toString() == "+9979" && integer1--.toString() == "+9979" && integer1.toString() == "+9978");
+    assert((integer1 = 0).toString() == "+0" && integer1--.toString() == "+0" && integer1.toString() == "-1");
+    assert((integer1 = -1).toString() == "-1" && integer1--.toString() == "-1" && integer1.toString() == "-2");
+    assert((integer1 = 0).toString() == "+0" && (--integer1).toString() == "-1" && integer1.toString() == "-1");
+    assert((integer1 = -1).toString() == "-1" && (--integer1).toString() == "-2" && integer1.toString() == "-2");
+    assert((integer1 = 9979).toString() == "+9979" && (--integer1).toString() == "+9978" && integer1.toString() == "+9978");
+    assert((integer2 = (integer1 = 9979) - 1).toString() == "+9978");
     return 0;
 }

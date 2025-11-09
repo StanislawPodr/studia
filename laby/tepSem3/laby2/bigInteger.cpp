@@ -27,7 +27,7 @@ BigInteger::BigInteger(int value)
     initWithValue(value);
 }
 
-BigInteger::BigInteger(BigInteger &other)
+BigInteger::BigInteger(const BigInteger &other)
 {
     copyObject(other);
 }
@@ -69,13 +69,13 @@ BigInteger &BigInteger::operator=(int value)
     return initWithValue(value);
 }
 
-BigInteger &BigInteger::operator=(BigInteger &other)
+BigInteger &BigInteger::operator=(const BigInteger &other)
 {
     delete[] this->digits;
     return copyObject(other);
 }
 
-int BigInteger::bigIntegerCmp(BigInteger &a, BigInteger &b)
+int BigInteger::bigIntegerCmp(const BigInteger &a, const BigInteger &b)
 {
     if (a.numberOfDigits > b.numberOfDigits)
         return 1;
@@ -85,7 +85,7 @@ int BigInteger::bigIntegerCmp(BigInteger &a, BigInteger &b)
         return -1;
 }
 
-BigInteger &BigInteger::copyObject(BigInteger &other)
+BigInteger &BigInteger::copyObject(const BigInteger &other)
 {
     this->digits = new int[other.numberOfDigits];
     this->isNegative = other.isNegative;
@@ -114,7 +114,7 @@ BigInteger::BigInteger(int *digits, bool isNegative, std::size_t numberOfDigits)
     this->numberOfDigits = numberOfDigits;
 }
 
-bool BigInteger::isZero()
+bool BigInteger::isZero() const
 {
     if (isNegative)
         return false;
@@ -126,7 +126,7 @@ bool BigInteger::isZero()
     return true;
 }
 
-BigInteger BigInteger::operator+(BigInteger &other)
+BigInteger BigInteger::operator+(const BigInteger &other)
 {
     if (this->isNegative || other.isNegative)
     {
@@ -159,7 +159,7 @@ void BigInteger::borrow(int *current)
     *position += NUMERIC_SYSTEM;
 }
 
-BigInteger BigInteger::operator-(BigInteger &other)
+BigInteger BigInteger::operator-(const BigInteger &other)
 {
     if (this->isNegative || other.isNegative)
     {
@@ -186,7 +186,7 @@ BigInteger BigInteger::operator-()
     return res;
 }
 
-BigInteger BigInteger::operator*(BigInteger &other)
+BigInteger BigInteger::operator*(const BigInteger &other)
 {
     bool isResNegative = this->isNegative ^ other.isNegative;
     if (this->isZero() || other.isZero())
@@ -205,7 +205,7 @@ BigInteger BigInteger::operator*(BigInteger &other)
     }
 }
 
-BigInteger BigInteger::operator/(BigInteger &other)
+BigInteger BigInteger::operator/(const BigInteger &other)
 {
     if (this->isZero())
     {
@@ -215,9 +215,57 @@ BigInteger BigInteger::operator/(BigInteger &other)
     return dividePositive(*this, other, isResNegative);
 }
 
-BigInteger BigInteger::substractPositive(BigInteger &a, BigInteger &b)
+BigInteger &BigInteger::operator++()
 {
-    BigInteger *max, *min;
+    BigInteger increment{1};
+    BigInteger result = *this + increment;
+    this->digits = new int[result.numberOfDigits];
+    memcpy(this->digits, result.digits, sizeof(int) * result.numberOfDigits);
+    this->isNegative = result.isNegative;
+    this->numberOfDigits = result.numberOfDigits;
+    return *this;
+}
+
+BigInteger BigInteger::operator++(int)
+{
+    BigInteger increment{1};
+    BigInteger returned{*this};
+    BigInteger result = *this + increment;
+    delete[] this->digits;
+    this->digits = new int[result.numberOfDigits];
+    memcpy(this->digits, result.digits, sizeof(int) * result.numberOfDigits);
+    this->isNegative = result.isNegative;
+    this->numberOfDigits = result.numberOfDigits;
+    return returned;
+}
+
+BigInteger &BigInteger::operator--()
+{
+    BigInteger decrement{1};
+    BigInteger result = *this - decrement;
+    this->digits = new int[result.numberOfDigits];
+    memcpy(this->digits, result.digits, sizeof(int) * result.numberOfDigits);
+    this->isNegative = result.isNegative;
+    this->numberOfDigits = result.numberOfDigits;
+    return *this;
+}
+
+BigInteger BigInteger::operator--(int)
+{
+    BigInteger decrement{1};
+    BigInteger returned{*this};
+    BigInteger result = *this - decrement;
+    delete[] this->digits;
+    this->digits = new int[result.numberOfDigits];
+    memcpy(this->digits, result.digits, sizeof(int) * result.numberOfDigits);
+    this->isNegative = result.isNegative;
+    this->numberOfDigits = result.numberOfDigits;
+    return returned;
+}
+
+BigInteger BigInteger::substractPositive(const BigInteger &a, const BigInteger &b)
+{
+    const BigInteger *max, *min;
     int cmp = bigIntegerCmp(a, b);
     bool isNegative = cmp < 0;
     if (cmp == 0)
@@ -239,9 +287,9 @@ BigInteger BigInteger::substractPositive(BigInteger &a, BigInteger &b)
     return BigInteger(res, isNegative, size);
 }
 
-BigInteger BigInteger::addPositive(BigInteger &a, BigInteger &b, bool isResNegative)
+BigInteger BigInteger::addPositive(const BigInteger &a, const BigInteger &b, bool isResNegative)
 {
-    BigInteger *max, *min;
+    const BigInteger *max, *min;
     int cmp = bigIntegerCmp(a, b);
     bool isSwaped = cmp < 0;
     if (isSwaped)
@@ -260,7 +308,7 @@ BigInteger BigInteger::addPositive(BigInteger &a, BigInteger &b, bool isResNegat
     return BigInteger(res, isResNegative, size);
 }
 
-BigInteger BigInteger::orderMultPositive(BigInteger &max, BigInteger &min, bool isResNegative)
+BigInteger BigInteger::orderMultPositive(const BigInteger &max, const BigInteger &min, bool isResNegative)
 {
     BigInteger result{max};
     for (BigInteger i{1}, inc{1}; bigIntegerCmp(i, min) < 0;)
@@ -279,7 +327,7 @@ BigInteger BigInteger::orderMultPositive(BigInteger &max, BigInteger &min, bool 
     return result;
 }
 
-BigInteger BigInteger::dividePositive(BigInteger dividend, BigInteger &divisor, bool isResNegative)
+BigInteger BigInteger::dividePositive(BigInteger dividend, const BigInteger &divisor, bool isResNegative)
 {
     if (divisor.isZero())
         return BigInteger();
@@ -310,7 +358,7 @@ BigInteger BigInteger::dividePositive(BigInteger dividend, BigInteger &divisor, 
     return result;
 }
 
-int *BigInteger::substractFromBigger(std::size_t &resSize, BigInteger *max, BigInteger *min)
+int *BigInteger::substractFromBigger(std::size_t &resSize, const BigInteger *max, const BigInteger *min)
 {
 
     int maxDigits = max->numberOfDigits;
@@ -343,7 +391,7 @@ int *BigInteger::substractFromBigger(std::size_t &resSize, BigInteger *max, BigI
     return diff;
 }
 
-int *BigInteger::addSmallToBig(std::size_t &resSize, BigInteger *max, BigInteger *min)
+int *BigInteger::addSmallToBig(std::size_t &resSize, const BigInteger *max, const BigInteger *min)
 {
     int maxDigits = max->numberOfDigits;
     int minDigits = min->numberOfDigits;
