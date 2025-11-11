@@ -45,3 +45,17 @@ let mergeSort predicate list =
 
 
 mergeSort (<=) [10; 5; 2; 8; 4;];;
+let curry3 f a b c = 
+        f (a, b, c);;
+
+
+let uncurry3 f (a, b, c) = 
+        f a b c;;
+
+
+let rec sumProd xs =
+  let apply acc arg = 
+    (fst acc + arg, fst acc * arg)
+  in List.fold_left apply (0, 1) xs
+;;
+
