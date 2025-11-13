@@ -9,3 +9,7 @@ dpois(5, 2)
 1 - ppois(3, 2)
 ppois(5, 2) - ppois(2, 2)
 plot(0:30, sapply(0:30, function(x) dpois(x, 2)), type="h")
+
+#zadanie3
+dunif(5, 4, 12)
+punif()
