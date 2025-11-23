@@ -17,7 +17,7 @@ void TreeCli::enter()
 
 void TreeCli::print()
 {
-    fprintf(stdout, "tree: %s\n", myTree.getPolishNotationTree());
+    std::cout << "tree: "<< myTree.getPolishNotationTree() << "\n";
 }
 
 void TreeCli::comp()
@@ -58,6 +58,12 @@ void TreeCli::cliInterfaceInit()
             {
                 join();
             }
+            else 
+            {
+                std::cout << "No instruction: " <<command <<" found\n";
+            }
         }
     }
 }
+
+TreeCli::TreeCli() = default;

@@ -3,7 +3,7 @@
 #include <treeConstants.h>
 #include <cmath>
 #include <iostream>
-#include "treeCliParser.h"
+#include <treeCliParser.h>
 
 
 bool TreeCliParser::getNextStringToken(std::istringstream &iss, std::string &result)
@@ -46,27 +46,6 @@ std::string TreeCliParser::getPolishNotationTree()
     return polishNotationTree;
 }
 
-bool TreeCliParser::getNextVarChar(char &result, const char *&current)
-{
-    current++;
-    result = -1;
-    while (*current != '\0' && result == -1)
-    {
-        while (*current != '\0' && !isalpha(*current))
-            current++;
-
-        if (*current != '\0' && *(current + 1) != ' ' && *(current + 1) != '\0')
-        {
-            while (*current != '\0' && *current != ' ')
-                current++;
-        }
-        else
-        {
-            result = *current;
-        }
-    }
-    return *current != '\0';
-}
 
 void TreeCliParser::setForTreeBuild(std::istringstream &iss)
 {
@@ -79,12 +58,16 @@ TreeCliParser::TreeCliParser(std::istringstream &iss)
     this->tree = Tree{*this};
 }
 
+TreeCliParser::TreeCliParser() = default;
+
+
 TreeNode &TreeCliParser::getToken()
 {
     std::string nextToken;
     if (!getNextStringToken(*iss, nextToken))
     {
         polishNotationTree += std::string(" ") + std::to_string(FIX_VALUE);
+        std::cout << "Too few arguments, filling with: " << FIX_VALUE << "\n";
         return *(new ValueExistingNode{FIX_VALUE});
     }
     else if (nextToken == ADD_OPERATOR)
@@ -117,42 +100,40 @@ TreeNode &TreeCliParser::getToken()
         polishNotationTree += " " COS_OPERATOR;
         return *(new CosOperatorNode);
     }
-    else if (nextToken.size() == 1 && isalpha(nextToken[0]))
+    else if (isalpha(nextToken[0]))
     {
         polishNotationTree += " ";
-        polishNotationTree += nextToken[0];
-        tree_value_t *ptrToSet = &varsUsedSet[nextToken[0]];
-        return *(new VariableNode{*this, (void *)ptrToSet});
+        polishNotationTree += nextToken;
+        varsUsed[nextToken] = 0;
+        return *(new VariableNode{nextToken});
     }
 
     // sprawdzanie czy wynik jest liczbą
     tree_value_t result;
     if (!cvtStr(nextToken, result))
     {
-        fprintf(stdout, "Skipped: %s\n", nextToken);
+        std::cout << "Skipped: "<< nextToken << "\n";
         return getToken();
     }
 
     polishNotationTree += " ";
-    polishNotationTree += result;
+    polishNotationTree += std::to_string(result);
     return *(new ValueExistingNode{result});
 }
 
-tree_value_t TreeCliParser::getVar(void *variableName)
+tree_value_t TreeCliParser::getVar(std::string &variableName)
 {
-    return varsUsedSet[*(char *)variableName];
+    return varsUsed[variableName];
 }
 
 void TreeCliParser::vars()
 {
-    char result;
-    const char *current = getPolishNotationTree().c_str();
-    fprintf(stdout, "vars: ");
-    while (getNextVarChar(result, current))
+    printf("vars: ");
+    for (const auto &var : varsUsed)
     {
-        fprintf(stdout, "%c ", result);
+        std::cout << var.first << " ";
     }
-    fprintf(stdout, "\n");
+    putchar('\n');
 }
 
 
@@ -163,20 +144,47 @@ void TreeCliParser::enter()
 
 void TreeCliParser::comp()
 {
-    char var;
-    const char *currentVar = getPolishNotationTree().c_str();
-    bool allVars = true;
-    while (allVars && getNextVarChar(var, currentVar))
+    std::string word;
+    bool notAllFromInput = TreeCliParser::getNextStringToken(*iss, word);
+    auto iterator = varsUsed.begin();
+    while (notAllFromInput && iterator != varsUsed.end())
     {
-        std::string word;
         tree_value_t val;
-        allVars = TreeCliParser::getNextStringToken(*iss, word) && TreeCliParser::cvtStr(word, val);
-        varsUsedSet[word[0]] = 
+        notAllFromInput = TreeCliParser::cvtStr(word, val) && TreeCliParser::getNextStringToken(*iss, word);
+        varsUsed[iterator->first] = val;
+        iterator++;
+    }
+    
+    if (!notAllFromInput && iterator == varsUsed.end())
+    {
+        std::cout << tree.apply(*this) << "\n";
+    }
+    else
+    {
+        std::cout << "Wrong arguments\n";
     }
 }
 
 void TreeCliParser::join(TreeCliParser &secondTree)
 {
     tree.merge(secondTree.tree);
+    std::string possibleVar = "";
+
+    while(polishNotationTree != "" && !std::isspace(static_cast<unsigned char>(polishNotationTree.back())))
+    {
+        possibleVar += polishNotationTree.back();
+        polishNotationTree.pop_back();
+    }
+
+    while(std::isspace(static_cast<unsigned char>(polishNotationTree.back())))
+    {
+        polishNotationTree.pop_back();
+    }
+    
     polishNotationTree += secondTree.polishNotationTree;
+    varsUsed.erase(possibleVar);
+    varsUsed.merge(secondTree.varsUsed);
 }
+
+
+TreeCliParser::~TreeCliParser() = default;

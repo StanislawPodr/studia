@@ -2,7 +2,7 @@
 #include <cmath>
 
 
-void OperatorNodeTwoNodes::addNext(TreeParser &const parser)
+void OperatorNodeTwoNodes::addNext(TreeParser &parser)
 {
     left = &parser.getToken();
     left->addNext(parser);
@@ -11,62 +11,118 @@ void OperatorNodeTwoNodes::addNext(TreeParser &const parser)
     right->addNext(parser);
 }
 
-void OperatorNodeOneNode::addNext(TreeParser &const parser)
+void OperatorNodeOneNode::addNext(TreeParser &parser)
 {
     child = &parser.getToken();
     child->addNext(parser);
 }
 
-void ValueNode::addNext(TreeParser &const parser)
+void ValueNode::addNext(TreeParser &parser)
 {
     return;
 }
 
-tree_value_t AddOperatorNode::apply()
+tree_value_t AddOperatorNode::apply(TreeParser &valueProvider)
 {
-    return left->apply() + right->apply();
+    return left->apply(valueProvider) + right->apply(valueProvider);
 }
 
-tree_value_t SubstractOperatorNode::apply()
+TreeNode *AddOperatorNode::copy()
 {
-    return left->apply() - right->apply();
+    AddOperatorNode* cp = new AddOperatorNode;
+    cp->left = left->copy();
+    cp->right = right->copy();
+    return cp;
 }
 
-tree_value_t MultiplyOperatorNode::apply()
+tree_value_t SubstractOperatorNode::apply(TreeParser &valueProvider)
 {
-    return left->apply() * right->apply();
+    return left->apply(valueProvider) - right->apply(valueProvider);
 }
 
-tree_value_t DivisionOperatorNode::apply()
+TreeNode *SubstractOperatorNode::copy()
 {
-    return left->apply() / right->apply();
+    SubstractOperatorNode* cp = new SubstractOperatorNode;
+    cp->left = left->copy();
+    cp->right = right->copy();
+    return cp;
 }
 
-tree_value_t SinOperatorNode::apply()
+tree_value_t MultiplyOperatorNode::apply(TreeParser &valueProvider)
 {
-    return sin(child->apply());
+    return left->apply(valueProvider) * right->apply(valueProvider);
 }
 
-tree_value_t CosOperatorNode::apply()
+TreeNode *MultiplyOperatorNode::copy()
 {
-    return cos(child->apply());
+    MultiplyOperatorNode* cp = new MultiplyOperatorNode;
+    cp->left = left->copy();
+    cp->right = right->copy();
+    return cp;
 }
 
-tree_value_t ValueExistingNode::apply()
+tree_value_t DivisionOperatorNode::apply(TreeParser &valueProvider)
+{
+    return left->apply(valueProvider) / right->apply(valueProvider);
+}
+
+TreeNode *DivisionOperatorNode::copy()
+{
+    DivisionOperatorNode* cp = new DivisionOperatorNode;
+    cp->left = left->copy();
+    cp->right = right->copy();
+    return cp;
+}
+
+tree_value_t SinOperatorNode::apply(TreeParser &valueProvider)
+{
+    return sin(child->apply(valueProvider));
+}
+
+TreeNode *SinOperatorNode::copy()
+{
+    SinOperatorNode* cp = new SinOperatorNode;
+    cp->child = child->copy();
+    return cp;
+}
+
+tree_value_t CosOperatorNode::apply(TreeParser &valueProvider)
+{
+    return cos(child->apply(valueProvider));
+}
+
+TreeNode *CosOperatorNode::copy()
+{
+    CosOperatorNode* cp = new CosOperatorNode;
+    cp->child = child->copy();
+    return cp;
+}
+
+tree_value_t ValueExistingNode::apply(TreeParser &valueProvider)
 {
     return value;
 }
 
-tree_value_t VariableNode::apply()
+TreeNode *ValueExistingNode::copy()
+{
+    return new ValueExistingNode{value};
+}
+
+tree_value_t VariableNode::apply(TreeParser &valueProvider)
 {
     return valueProvider.getVar(variableName);
+}
+
+TreeNode *VariableNode::copy()
+{
+    return new VariableNode{variableName};
 }
 
 ValueExistingNode::ValueExistingNode(tree_value_t val) : value(val)
 {
 }
 
-VariableNode::VariableNode(TreeParser &valProvider, void *varName) : valueProvider(valProvider), variableName(varName)
+VariableNode::VariableNode(std::string varName) : variableName(varName)
 {
 }
 

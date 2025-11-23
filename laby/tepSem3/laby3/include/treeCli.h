@@ -9,12 +9,13 @@ class TreeCli
 {
     std::string line = "";
     std::istringstream iss{};
+    TreeCliParser myTree;
     void vars();
     void enter();
     void print();
     void comp();
     void join();
 public:
-    TreeCliParser myTree;
     void cliInterfaceInit();
+    TreeCli();
 };
