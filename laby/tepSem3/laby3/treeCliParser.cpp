@@ -144,6 +144,12 @@ void TreeCliParser::enter()
 
 void TreeCliParser::comp()
 {
+    if(tree.isEmpty())
+    {
+        std::cout << "Can't comp, tree is not set\n";
+        return;
+    }
+
     std::string word;
     bool notAllFromInput = TreeCliParser::getNextStringToken(*iss, word);
     auto iterator = varsUsed.begin();
@@ -167,6 +173,12 @@ void TreeCliParser::comp()
 
 void TreeCliParser::join(TreeCliParser &secondTree)
 {
+    if(tree.isEmpty())
+    {
+        std::cout << "Can't join, tree is not set. \n";
+        return;
+    }
+
     tree.merge(secondTree.tree);
     std::string possibleVar = "";
 

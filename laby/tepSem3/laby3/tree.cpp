@@ -1,6 +1,11 @@
 #include "tree.h"
 #include <treeParser.h>
 
+bool Tree::isEmpty()
+{
+    return head == nullptr;
+}
+
 void Tree::merge(Tree &other)
 {
     if(head == nullptr || head->getNext() == nullptr)

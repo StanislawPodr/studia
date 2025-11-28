@@ -9,6 +9,7 @@ class Tree
 {
     TreeNode *head = nullptr;
 public:
+    bool isEmpty();
     void merge(Tree &other);
     void createFromInput(TreeParser &parser);
     tree_value_t apply(TreeParser &valueProvider);
