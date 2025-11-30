@@ -1,4 +1,5 @@
 #pragma once
+#include <vector>
 
 template <typename T, typename E>
 class Result
