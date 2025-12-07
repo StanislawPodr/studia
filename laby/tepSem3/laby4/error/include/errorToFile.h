@@ -25,7 +25,9 @@ public:
             return false;
         }
 
-        return ResultToFileBase::saveErrors(result.getErrors(), fileName, fp) >= 0;
+        bool returned = ResultToFileBase::saveErrors(result.getErrors(), fileName, fp) >= 0;
+        fclose(fp);
+        return returned;
     }
 };
 
@@ -41,7 +43,17 @@ public:
             return false;
         }
 
-        bool savedErr = ResultToFileBase::saveErrors(*parser.getErrors(), fileName, fp) >= 0;
-        return savedErr && fprintf(fp, "%s", (parser.getPolishNotationTree() + "\n").c_str()) >= 0;
+        bool result = false;
+        if((*parser.getErrors()).empty())
+        {
+            result = fprintf(fp, "%s", parser.getPolishNotationTree().c_str()) >= 0;
+        }
+        else 
+        {
+            result = ResultToFileBase::saveErrors(*parser.getErrors(), fileName, fp) >= 0;
+        }
+
+        fclose(fp);
+        return result;
     }
 };
