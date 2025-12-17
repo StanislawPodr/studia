@@ -10,7 +10,7 @@ public:
     Result(E *error);
     Result(std::vector<E *> &errors);
     Result(const Result<T, E> &other);
-    Result() = default;
+    Result();
     ~Result();
     static Result<T, E> ok(const T &value);
     static Result<T, E> fail(E *error);
@@ -49,5 +49,10 @@ private:
     bool success = false;
 };
 
+template<typename T>
+class Result<T, T>
+{
+    Result() = delete;
+};
 
 #include <result.tpp>
