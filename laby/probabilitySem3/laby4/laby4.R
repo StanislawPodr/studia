@@ -3,7 +3,8 @@ rand5000 <- runif(5000)
 norm300 <- rnorm(3000, 100, 15)
 
 hist(rand5000, breaks=100) #liczby w miarę stałe dla dużych interwałów
-hist(norm300, breaks=100) #ładnie widać, że najwięcej wartości wypada w okolicach 100, co jest 
+hist(norm300, breaks=100) #ładnie widać, że najwięcej wartości 
+#wypada w okolicach 100, co jest 
 #podaną przez nas wartością oczekiwaną
 
 r5k <- density(rand5000)
