@@ -104,7 +104,7 @@ Tree &Tree::operator=(Tree &&other)
     return *this;
 }
 
-Tree Tree::operator+(Tree second)
+Tree Tree::operator+(Tree second) &
 {
     Tree result{*this};
     AddOperatorNode *addNode = new AddOperatorNode{result.head, second.head};
@@ -114,9 +114,9 @@ Tree Tree::operator+(Tree second)
     return result;
 }
 
-Tree Tree::operator+(Tree &&second)
+Tree Tree::operator+(Tree second) &&
 {
-    Tree result{*this};
+    Tree &result = *this;
     AddOperatorNode *addNode = new AddOperatorNode{result.head, second.head};
     result.head = addNode;
     second.head = nullptr;

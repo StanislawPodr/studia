@@ -22,8 +22,8 @@ public:
     Tree() = default;
     Tree &operator=(const Tree &second);
     Tree &operator=(Tree &&second);
-    Tree operator+(Tree second);
-    Tree operator+(Tree &&second);
+    Tree operator+(Tree second) &;
+    Tree operator+(Tree second) &&;
     size_t getNoCopies() { return noCopies; }
     ~Tree();
 };

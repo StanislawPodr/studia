@@ -217,7 +217,7 @@ void TreeCliParser::add(TreeCliParser &secondTree)
 
     polishNotationTree = " +" + polishNotationTree + secondTree.polishNotationTree;
 
-    *result.getValuePtr() = *result.getValuePtr() + *secondTree.result.getValuePtr();
+    *result.getValuePtr() = std::move(*result.getValuePtr()) + std::move(*secondTree.result.getValuePtr());
     varsUsed.merge(secondTree.varsUsed);
 }
 
