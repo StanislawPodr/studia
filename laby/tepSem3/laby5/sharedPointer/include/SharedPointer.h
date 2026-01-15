@@ -1,13 +1,58 @@
+#pragma once
+
+#include "BorrowingPointer.h"
+#include <vector>
+
+template <typename T>
 class RefCounter
 {
 public:
-    RefCounter() { count; }
+    T *ptr;
+
+    RefCounter(T *pointer) : ptr(pointer) {}
     int add() { return (++count); }
-    int dec() { return (--count); };
+    int dec()
+    {
+        if (--count == 0)
+        {
+            notifyPtrs();
+            delete ptr;
+            delete this;
+        }
+
+        return count;
+    }
+
+    void addBorrowing(BorrowingPointer<T> &borrowed)
+    {
+        ptrs.push_back(&borrowed);
+    }
+
     int get() { return (count); }
 
+    void removeBorrowing(const BorrowingPointer<T> &other)
+    {
+        for (int i = 0; i < ptrs.size(); i++)
+        {
+            if (&other == ptrs[i])
+            {
+                ptrs.erase(i);
+                return;
+            }
+        }
+    }
+
 private:
-    int count;
+    void notifyPtrs()
+    {
+        for (auto ptr : ptrs)
+        {
+            ptr->notify();
+        }
+    }
+
+    std::vector<BorrowingPointer<T> *> ptrs;
+    int count = 0;
 };
 
 template <typename T>
@@ -16,12 +61,11 @@ class SharedPointer
 public:
     SharedPointer(T *pointer)
     {
-        pointer = pointer;
-        counter = new RefCounter();
+        counter = new RefCounter<T>(pointer);
         counter->add();
     }
 
-    SharedPointer(const SharedPointer &other)
+    SharedPointer(const SharedPointer<T> &other)
     {
         clone(other);
     }
@@ -30,33 +74,33 @@ public:
     {
         dispose();
     }
-    T &operator*() { return (*pointer); }
-    T *operator->() { return (pointer); }
 
-    SharedPointer& operator=(const SharedPointer &other)
+    T &operator*() { return (*counter->ptr); }
+    T *operator->() { return (counter->ptr); }
+
+    SharedPointer &operator=(const SharedPointer<T> &other)
     {
         dispose();
         clone(other);
     }
 
-private:
-
-    void clone(const SharedPointer &other) 
+    BorrowingPointer<T> borrow()
     {
-        pointer = other.pointer;
+        return BorrowingPointer<T>(*this);
+    }
+
+private:
+    void clone(const SharedPointer<T> &other)
+    {
         counter = other.counter;
         counter->add();
     }
 
     void dispose()
     {
-        if (counter->dec() == 0)
-        {
-            delete pointer;
-            delete counter;
-        }
+        counter->dec();
     }
 
-    RefCounter *counter;
-    T *pointer;
+    RefCounter<T> *counter;
+    friend class BorrowingPointer<T>;
 };

@@ -97,6 +97,11 @@ Tree &Tree::operator=(const Tree &other)
 
 Tree &Tree::operator=(Tree &&other)
 {
+    if (this->head == other.head) [[unlikely]]
+    {
+        return *this;
+    }
+
     delete this->head;
     this->head = other.head;
     other.head = nullptr;
