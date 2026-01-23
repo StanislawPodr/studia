@@ -84,8 +84,8 @@ double Individual::calculateRoutesCost(const Data &data) const
 {
     auto routes = getRoutes(data); // wektory reprezentujące każdą trasę
 
-    auto &depot = data.coordinates[data.depot - 1];
-    Traveller costCounter{depot};
+    size_t depot = data.depot - 1;
+    Traveller costCounter{depot, data};
 
     for (auto &route : routes)
     {
@@ -94,10 +94,10 @@ double Individual::calculateRoutesCost(const Data &data) const
         for (int customerIdx : route)
         {
             int demand = data.demand[customerIdx];
-            const auto &nxtCustomer = data.coordinates[customerIdx];
+            const unsigned nxtCustomer = customerIdx;
 
             // Jeżeli dystans będzie za duży to nie da rady się wrócić
-            std::vector<std::pair<double, double>> distanceToAchieve{nxtCustomer, depot};
+            std::vector<size_t> distanceToAchieve{nxtCustomer, depot};
             double distToNxtAndDepot = costCounter.travelCost(distanceToAchieve);
             bool distanceTooHigh = costCounter.distUsed + distToNxtAndDepot > data.maxDistance;
 
@@ -149,7 +149,7 @@ std::pair<Individual, Individual> Individual::crossInPoint(const Individual &fir
     groupSecChild.insert(groupSecChild.end(), groupFstParent.begin() + crossIndex,
                          groupFstParent.end());
 
-    return std::pair{std::move(firstChild), std::move(secondChild)};
+    return std::pair{firstChild, secondChild};
 }
 
 void Individual::mutate(Individual &toMutate, std::mt19937 &generator, const Data &data)

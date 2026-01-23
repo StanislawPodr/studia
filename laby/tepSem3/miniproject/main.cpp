@@ -4,7 +4,7 @@
 
 int main(int argc, char** argv)
 {
-    std::string filePath = "lcvrp/Vrp-Set-Golden/Golden_4.lcvrp";
+    std::string filePath = "lcvrp/Vrp-Set-D/Loggi-n601-k42.lcvrp";
     Data experimentData;
     double resultFitness;
     try

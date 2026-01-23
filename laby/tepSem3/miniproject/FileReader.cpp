@@ -89,17 +89,30 @@ void FileReader::validateLogic(const Data &toValidation)
         }
     }
 
-    // sprawdzanie czy z każdego koordynatu można wrócić do depotu (czy maxDist się zgadza)
-    const auto &coords = toValidation.coordinates;
+    //sprawdzenie czy mamy z czego wyznaczyć ścierzki
+    size_t coordVctrSize = toValidation.coordinates.size();
+    if (coordVctrSize < toValidation.dimension)
+    {
+        // + 1 ponieważ macierz jest trójkątna i nie ma jednego indeksu
+        size_t edgeWeightsVctrSize = toValidation.edgeWeights.size() + 1;
+        if (edgeWeightsVctrSize < toValidation.dimension)
+        {
+            throw std::invalid_argument("Exception in testing routes. "
+                                        "Please specify coordinates or triangle matrix");
+        }
+    }
 
-    const auto &depotCoord = toValidation.coordinates[toValidation.depot - 1];
-    const double &maxDistance = toValidation.maxDistance;
+    // sprawdzanie czy z każdego punktu można wrócić do depotu (czy maxDist się zgadza)
+    const auto &shops = toValidation.permutation;
+
+    const size_t depotIdx = toValidation.depot - 1;
+    const double maxDistance = toValidation.maxDistance;
 
     // sprawdzanie po kolei koordynatów czy wyjazd tam i spowrotem przekracza zakres
-    bool cantGoBack = std::any_of(coords.begin(), coords.end(),
-                                  [&depotCoord, &maxDistance](const auto &coord)
+    bool cantGoBack = std::any_of(shops.begin(), shops.end(),
+                                  [depotIdx, maxDistance, &toValidation](const size_t shopNo)
                                   {
-                                      double distance = Data::calculateDist(depotCoord, coord);
+                                      double distance = toValidation.calculateDist(depotIdx, shopNo - 1);
                                       return 2 * distance > maxDistance;
                                   });
 
@@ -229,6 +242,8 @@ void FileReader::readPermutation(std::istringstream &iss, Data &result)
 
 void FileReader::readNodeCoordSection(std::ifstream &file, Data &result)
 {
+    result.calculatorFunction = Data::calculateDistByCoords;
+
     result.coordinates.reserve(result.dimension);
 
     int dimIndex = 1;
@@ -303,6 +318,9 @@ void FileReader::readDepotSection(std::ifstream &file, Data &result)
 
 void FileReader::readEdgeWeightSection(std::ifstream &file, Data &result)
 {
+    result.calculatorFunction = Data::calculateDistByEdgeWeights;
+
+
     result.edgeWeights.reserve(result.dimension - 1);
 
     int dimIndex = 1;
@@ -318,7 +336,7 @@ void FileReader::readEdgeWeightSection(std::ifstream &file, Data &result)
         nextWeights.reserve(dimIndex);
 
         double weight;
-        while (iss >> weight && weight > 0)
+        while (iss >> weight && weight >= 0)
         {
             nextWeights.push_back(weight);
         }

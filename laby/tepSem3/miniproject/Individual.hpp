@@ -16,28 +16,28 @@ public:
                                                    std::mt19937 &generator, const Data &data);
     std::string toString();
 
-
 private:
     std::vector<int> groups; // grupa indeksowana tak jak permutacje
     void addToGroups(std::mt19937 &generator, const Data &data) noexcept;
     std::vector<std::vector<int>> getRoutes(const Data &data) const;
     static std::pair<Individual, Individual> crossInPoint(const Individual &firstParent,
-                                                   const Individual &secondParent,
-                                                   const int crossIndex);
+                                                          const Individual &secondParent,
+                                                          const int crossIndex);
     static void mutate(Individual &toMutate, std::mt19937 &generator, const Data &data);
 
     // struktura reprezentująca licznik przebytego dystansu i kosztu
     struct Traveller
     {
-        const std::pair<double, double> *positionPtr;
-        const std::pair<double, double> &depot;
+        size_t position;
+        const size_t depot;
+        const Data &data;
         double cost = 0;     // całościowy koszt naszej wyprawy
         double distUsed = 0; // droga przebyta od wizyty w depocie
-        Traveller(const std::pair<double, double> &startingPos) : positionPtr(&startingPos), depot(startingPos) {}
-        Traveller(const std::vector<std::pair<double, double>> locations, const std::pair<double, double> &startingPos);
-        void travel(const std::pair<double, double> &to);
-        void travel(const std::vector<std::pair<double, double>> nxtLocations);
+        Traveller(const std::vector<size_t> &locations, const size_t startingPos, const Data &data);
+        Traveller(const size_t startingPos, const Data &data) : position(startingPos), data(data), depot(startingPos) {}
+        void travel(const size_t to);
+        void travel(const std::vector<size_t> &nxtLocations);
         void goBackToDepot();
-        double travelCost(const std::vector<std::pair<double, double>> &nxtLocations) const;
+        double travelCost(const std::vector<size_t> &nxtLocations) const;
     };
 };
