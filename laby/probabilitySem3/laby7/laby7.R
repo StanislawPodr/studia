@@ -35,24 +35,37 @@ chisq.test(realThrows[2,], p=rep(1/6, 6))
 x <- rexp(1000, rate=1)
 
 # b
+# H0 -> czy x pochodzi z rozkładu normalnego z wartością oczekiwaną 1 i 
+# odchyleniem 1
 ks.test(x, "pnorm", mean=1, sd=1)
+# odrzucamy H0 bo p jest śmiesznie niskie
+
+# H0-> czy x pochodzi z rozkładu wykładniczego z lamda równym 1
 ks.test(x, "pexp", rate=1)
+# no wskazuje p value że pochodzi i to prawda bo z tego losowaliśmy
 
 # c
 # 1000 prób z rozkładu gamma
 x <- rgamma(1000, shape=100, scale=1)
 
 # d 
+# H0 -> czy x pochodzi z rozkładu normalnego z wartością oczekiwaną 100 i 
+# odchyleniem 10
 ks.test(x, "pnorm", mean=100, sd=10)
-ks.test(x, "pgamma", shape=100, scale=1)
+# wychodzi różnie ale moglibyśmy stwierdzić że pochodzi 
+# (rozkład normalny też jest gamma), nie odrzucamy
 
+# H0-> czy x pochodzi z rozkładu gamma z parametrami kształtu 100 i skali 1
+ks.test(x, "pgamma", shape=100, scale=1)
+# hipotezy nie odrzucamy wiemy też że pochodzi
 
 #wczytanie mieszkań
 file <- read.csv2("../mieszkania.csv")
 
 # zadanie 3 
-# czy metraż mieszkań ma rozkład normalny
+# H0 -> metraż mieszkań ma rozkład normalny
 shapiro.test(file$Metraz)
+# odrzucamy hipotezę bo p-value jest bardzo małe
 
 # zadanie 4
 # a 
@@ -66,7 +79,7 @@ coef(reglin)
 plot(file$Metraz, file$Cena, ylab="Cena",xlab="Metraz")
 
 # c 
-# testowanie hipotezy o rozkładzie normalnym reszt
+# H0 -> hipoteza o rozkładzie normalnym reszt
 prediction <- 72352.747 + file$Cena * 4755.602
 rests <- file$Metraz - prediction
 shapiro.test(rests)
