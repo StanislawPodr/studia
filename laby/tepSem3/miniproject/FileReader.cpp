@@ -148,6 +148,21 @@ void FileReader::validateLogic(const Data &toValidation)
     {
         throw std::invalid_argument("numberOfGroups is not valid");
     }
+
+    if (toValidation.demand.size() < toValidation.dimension)
+    {
+        throw std::invalid_argument("invalid demand size");
+    }
+
+    if (toValidation.permutation.size() < toValidation.dimension - 1)
+    {
+        throw std::invalid_argument("invalid permutation size");
+    }
+
+    if (toValidation.depot > toValidation.dimension)
+    {
+        throw std::invalid_argument("invalid depot number");
+    }
 }
 
 void FileReader::readName(std::istringstream &iss, Data &result)
