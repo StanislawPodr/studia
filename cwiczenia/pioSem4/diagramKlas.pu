@@ -53,6 +53,11 @@ class Parking {
   liczbaMiejsc : UnlimitedNatural
   liczbaZajetychMiejsc : UnlimitedNatural
   adres : Adres
+  aktualnaCena: Real
+  operator: String
+  czynnyOd: DateTime
+  czynnyDo: DateTime
+  czyStrzezony: Boolean
 }
 
 class StatystykiParkingu {
@@ -73,15 +78,16 @@ Administrator -up-|> Uzytkownik
 Urzednik -up-|> Uzytkownik
 Zarzadca -up-|> Uzytkownik
 
-Kierowca "1" *-- "*" Oplata : oplaty
-Kierowca "1" *-- "*" Zgloszenie : zgloszenia
+Kierowca "1" -- "0..*" Oplata : płaci >
+Kierowca "1" -- "0..*" Zgloszenie : zgłasza >
 
-Administrator -- Zgloszenie : zatwierdzenie zgłoszenia
+Administrator "1" -- "0..*" Zgloszenie : zatwierdza >
 
-Urzednik "0..*" -- "0..*" StatystykiParkingu
+Urzednik "0..*" -- "0..*" StatystykiParkingu : analizuje >
 
-Zarzadca "0..*" -- "0..*" Parking
+Zarzadca "0..*" -- "0..*" Parking : zarządza >
 
-Parking "1" o-- "*" StatystykiParkingu
+Parking "1" o-- "0..*" StatystykiParkingu
+Parking "1" -- "0..*" Oplata
 
 @enduml
