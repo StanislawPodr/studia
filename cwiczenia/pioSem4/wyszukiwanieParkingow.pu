@@ -1,0 +1,35 @@
+@startuml Wyszukiwanie Parkingów
+|Użytkownik|
+|Frontend|
+start
+    :Wyświetlenie mapy w lokalizacji użytkownika;
+    |Backend|
+    :Wczytanie danych dostępnych
+    parkingów w lokalizacji użytkownika;
+    if () then ([brak dostępnych parkingów])
+        |Frontend|
+        :Wyświetlenie komunikatu
+        o braku na górze ekranu;
+        stop
+    else ([dostępne parkingi])
+        |Frontend|
+        :Wyświetlenie dostępnych
+        lokalizacji parkingów na mapie;
+        repeat
+            |Użytkownik|
+            :Wybór punktu na mapie;
+            |Frontend|
+            :Wyświetlenie okienka obok punktu
+            (operator parkingu, godziny otwarcia, cena, obłożenie,
+            czy strzeżony, przycisk wyboru, zamknięcie);
+            |Użytkownik|
+            :Przegląd szczegółów parkingu;
+            :Wybór parkingu, 
+            wyjście z opcji wyboru lub 
+            kliknięcie innego punktu;
+        repeat while () not ([wybrano parking])
+        |Użytkownik|
+        :Kliknięcie przycisku zatwierdzenia;
+    endif
+stop
+@enduml

@@ -1,0 +1,87 @@
+@startuml diagramKlasParkingAplikacja
+
+class DateTime <<dataType>> {
+  rok : UnlimitedNatural
+  miesiac : UnlimitedNatural
+  dzien : UnlimitedNatural
+  godzina : UnlimitedNatural
+  minuta : UnlimitedNatural
+}
+
+abstract class Uzytkownik {
+  id : String
+  login : String
+  haslo : String
+  imie : String
+  nazwisko : String
+  pesel : String
+}
+
+class Kierowca {
+  numerTelefonu : String
+  adresEmail : String
+  stanKonta : Real
+}
+
+class Administrator {
+}
+
+class Urzednik {
+}
+
+class Zarzadca {
+}
+
+class Oplata {
+  kwota : Real
+  czasRozpoczecia : DateTime
+  czasWaznosciBiletu : DateTime
+  czyOplacone : Boolean
+  numerRejestracyjny : String
+  metodaPlatnosci : String
+}
+
+class Zgloszenie {
+  tresc : String
+  dataUtworzenia : DateTime
+  dataRozpatrzenia : DateTime
+  czyZatwierdzone : Boolean
+}
+
+class Parking {
+  nazwa : String
+  liczbaMiejsc : UnlimitedNatural
+  liczbaZajetychMiejsc : UnlimitedNatural
+  adres : Adres
+}
+
+class StatystykiParkingu {
+  data : DateTime
+  liczbaZajetychMiejsc : UnlimitedNatural
+}
+
+class Adres <<dataType>> {
+  kraj : String
+  kodPocztowy [0..1] : String
+  miasto : String
+  ulica [0..1] : String
+  numer : String
+}
+
+Kierowca -up-|> Uzytkownik
+Administrator -up-|> Uzytkownik
+Urzednik -up-|> Uzytkownik
+Zarzadca -up-|> Uzytkownik
+
+Kierowca "1" *-- "*" Oplata : oplaty
+Kierowca "1" *-- "*" Zgloszenie : zgloszenia
+
+Administrator -- Zgloszenie : zatwierdzenie zgłoszenia
+
+Urzednik "0..*" -- "0..*" StatystykiParkingu
+
+Zarzadca "0..*" -- "0..*" Parking
+
+Parking "1" o-- "*" StatystykiParkingu
+
+@enduml
