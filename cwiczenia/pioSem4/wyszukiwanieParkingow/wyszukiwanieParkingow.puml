@@ -1,4 +1,4 @@
-@startuml Wyszukiwanie Parkingów
+@startuml WyszukiwanieParkingów
 |Użytkownik|
 |Frontend|
 start
