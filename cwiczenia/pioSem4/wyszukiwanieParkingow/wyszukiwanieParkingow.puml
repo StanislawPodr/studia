@@ -4,7 +4,7 @@
 start
     :Wyświetlenie mapy w lokalizacji użytkownika;
     |Backend|
-    :Wczytanie danych dostępnych
+    :Wczytanie danych czynnych
     parkingów w lokalizacji użytkownika;
     :Parking &#123;0..*&#125;]
     if () then ([brak dostępnych parkingów])
@@ -34,5 +34,5 @@ start
         :Kliknięcie przycisku zatwierdzenia;
         :Parking &#123;1&#125;]
     endif
-stop
+    stop
 @enduml
