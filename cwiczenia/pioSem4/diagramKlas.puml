@@ -4,8 +4,12 @@ class DateTime <<dataType>> {
   rok : UnlimitedNatural
   miesiac : UnlimitedNatural
   dzien : UnlimitedNatural
-  godzina : UnlimitedNatural
-  minuta : UnlimitedNatural
+  czas : Time
+}
+
+class Time <<dataType>> {
+  godzina [0..1] : UnlimitedNatural
+  minuta [0..1] : UnlimitedNatural
 }
 
 abstract class Uzytkownik {
@@ -53,11 +57,13 @@ class Parking {
   liczbaMiejsc : UnlimitedNatural
   liczbaZajetychMiejsc : UnlimitedNatural
   adres : Adres
-  aktualnaCena: Real
   operator: String
-  czynnyOd: DateTime
-  czynnyDo: DateTime
   czyStrzezony: Boolean
+  otwarcia [7] : Time {ordered}
+  zamkniecia [7] : Time {ordered}
+  cena [7] : Real {ordered}
+  godzinyWSwieta [2] : Time {ordered}
+  cenaWSwieta : Real
 }
 
 class StatystykiParkingu {
@@ -73,6 +79,7 @@ class Adres <<dataType>> {
   numer : String
 }
 
+
 Kierowca -up-|> Uzytkownik
 Administrator -up-|> Uzytkownik
 Urzednik -up-|> Uzytkownik
@@ -87,7 +94,7 @@ Urzednik "0..*" -- "0..*" StatystykiParkingu : analizuje >
 
 Zarzadca "0..*" -- "0..*" Parking : zarządza >
 
-Parking "1" o-- "0..*" StatystykiParkingu
+Parking "1" *-- "0..*" StatystykiParkingu
 Parking "1" -- "0..*" Oplata
 
 @enduml
