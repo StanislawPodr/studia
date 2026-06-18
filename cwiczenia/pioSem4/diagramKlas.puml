@@ -59,10 +59,10 @@ class Parking {
   adres : Adres
   operator: String
   czyStrzezony: Boolean
-  otwarcia [7] : Time {ordered}
-  zamkniecia [7] : Time {ordered}
-  cena [7] : Real {ordered}
-  godzinyWSwieta [2] : Time {ordered}
+  otwarcia [7] : Time {ordered, nonunique}
+  zamkniecia [7] : Time {ordered, nonunique}
+  cena [7] : Real {ordered, nonunique}
+  godzinyWSwieta [2] : Time {ordered, nonunique}
   cenaWSwieta : Real
 }
 
