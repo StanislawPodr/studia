@@ -1,0 +1,224 @@
+<!doctype html>
+<html>
+
+<head>
+    <title>To są laby2</title>
+    <meta charset="UTF-8">
+    <meta name="keywords" content="HTML, website, laby2, laboratorium">
+    <meta name="author" content="Stanisław Podrecki">
+    <meta name="description" content="Laboratorium 2 z ms Java">
+</head>
+
+<body>
+    <article>
+        <p id="poczatek">Mamy znaki specjalne i listy nieuporządkowane:
+        <ul>
+            <li>&copy;</li>
+            <li>&euro;</li>
+            <li>&dollar;</li>
+            <li>&larr;</li>
+            <li>&race;</li>
+        </ul>
+        </p>
+
+        <p><strong>Mamy</strong> <small>też</small> <em>różne</em>
+            <del>tryby</del> <sub>formatowania</sub>
+        </p>
+
+        <p>
+            Są też listy uporządkowane:
+        <ol>
+            <li>jeden</li>
+            <li>dwa</li>
+            <li>trzy</li>
+            <li>cztery</li>
+        </ol>
+        </p>
+
+        <p>
+            Są też listy definicji:
+        <dl>
+            <dt>jeden</dt>
+            <dd>1</dd>
+            <dt>cztery</dt>
+            <dd>4</dd>
+        </dl>
+        </p>
+
+        <p>
+            Są też listy zagnieżdżone:
+        <ol id="lista">
+            <li>jeden</li>
+            <li>dwa</li>
+            <li>trzy</li>
+            <ul>
+                <li>cztery</li>
+                <li>jeden</li>
+                <ul>
+                    <li>cztery</li>
+                    <li>sto</li>
+                    <dl>
+                        <dt>dwieście</dt>
+                        <dd>200</dd>
+                        <dt>bułka</dt>
+                        <dd>pieczywo, można podawać z masłem</dd>
+                        <dt>masło</dt>
+                        <dd>można podawać z bułką</dd>
+                    </dl>
+                </ul>
+            </ul>
+        </ol>
+        </p>
+    </article>
+
+    <table id="tabela">
+        <caption>
+            Tabliczka mnożenia
+        </caption>
+        <thead>
+            <tr>
+                <th></th>
+                <th>01</th>
+                <th>02</th>
+                <th>03</th>
+                <th>04</th>
+                <th>05</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>01</th>
+                <td>01</td>
+                <td>02</td>
+                <td>03</td>
+                <td>04</td>
+                <td>05</td>
+            </tr>
+
+            <tr>
+                <th>02</th>
+                <td>02</td>
+                <td>04</td>
+                <td>06</td>
+                <td>08</td>
+                <td>10</td>
+            </tr>
+
+            <tr>
+                <th>03</th>
+                <td>03</td>
+                <td>06</td>
+                <td>09</td>
+                <td>12</td>
+                <td>15</td>
+            </tr>
+
+            <tr>
+                <th>04</th>
+                <td>04</td>
+                <td>08</td>
+                <td>12</td>
+                <td>16</td>
+                <td>20</td>
+            </tr>
+
+            <tr>
+                <th>05</th>
+                <td>05</td>
+                <td>10</td>
+                <td>15</td>
+                <td>20</td>
+                <td>25</td>
+            </tr>
+        </tbody>
+        <tfoot>
+            <tr>
+                <th>suma</th>
+                <td>15</td>
+                <td>30</td>
+                <td>45</td>
+                <td>60</td>
+                <td>75</td>
+            </tr>
+            <tr>
+                <th>&sum;</th>
+                <td>15</td>
+                <td colsapn="4">15 &times; n</td>
+            </tr>
+        </tfoot>
+    </table>
+
+    <main>
+        <form action="/submit-form" id="formularz" method="POST">
+
+            <div>
+                <label for="username">Imię użytkownika:</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+
+            <div>
+                <label for="password">Hasło:</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+
+            <div>
+                <label for="email">Adres e-mail:</label>
+                <input type="email" id="email" name="email">
+            </div>
+
+            <div>
+                <label for="age">Wiek:</label>
+                <input type="number" id="age" name="age" min="1" max="120">
+            </div>
+
+            <div>
+                <label for="birthdate">Data urodzenia:</label>
+                <input type="date" id="birthdate" name="birthdate">
+            </div>
+
+            <div>
+                <label for="favcolor">Ulubiony kolor:</label>
+                <input type="color" id="favcolor" name="favcolor" value="#ff0000">
+            </div>
+
+            <div>
+                <label for="volume">Głośność (0-100):</label>
+                <input type="range" id="volume" name="volume" min="0" max="100">
+            </div>
+
+            <div>
+                <label for="profilepic">Zdjęcie profilowe:</label>
+                <input type="file" id="profilepic" name="profilepic">
+            </div>
+
+            <div>
+                <label for="country">Kraj:</label>
+                <select id="country" name="country">
+                    <option value="pl">Polska</option>
+                    <option value="de">Niemcy</option>
+                    <option value="uk">Wielka Brytania</option>
+                </select>
+            </div>
+
+            <div>
+                <label for="bio">O sobie:</label>
+                <textarea id="bio" name="bio" rows="4" cols="30"></textarea>
+            </div>
+
+            <div>
+                <button type="submit">Wyślij formularz</button>
+            </div>
+
+        </form>
+    </main>
+
+    <footer>
+        <a href="#tabela">Link do tabelki</a>
+        <a href="#lista">Link do listy</a>
+        <a href="#formularz">Link do formularza</a>
+        <a href="#poczatek">Link do początku strony</a>
+    </footer>
+
+</body>
+
+</html>
