@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8">
+  <title>Start – CSS3</title>
+  <link rel="stylesheet" type="text/css" href="style.css">
+  <style>
+    #osadzony {
+      color: #8a2be2;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>CSS3 – laboratorium 3</h1>
+  </header>
+
+  <nav>
+    <ul>
+      <li><a href="index.html">Start</a></li>
+      <li>
+        <a href="#">CSS</a>
+        <ul>
+          <li><a href="tekst.html">Tekst i rozmiary</a></li>
+          <li><a href="tlo.html">Tło</a></li>
+          <li><a href="selektory.html">Selektory</a></li>
+        </ul>
+      </li>
+      <li>
+        <a href="#">Układ</a>
+        <ul>
+          <li><a href="box.html">Box model i pozycje</a></li>
+          <li><a href="tabele.html">Tabele</a></li>
+        </ul>
+      </li>
+      <li>
+        <a href="#">Efekty</a>
+        <ul>
+          <li><a href="pseudo.html">Pseudoklasy i pseudoelementy</a></li>
+        </ul>
+      </li>
+    </ul>
+  </nav>
+
+  <main>
+    <h2>1. Sposoby osadzania reguł CSS</h2>
+
+    <p>Arkusz zewnętrzny: <span class="zewnetrzny">ten tekst jest stylowany z pliku style.css</span>.</p>
+
+    <p>Arkusz osadzony: <span id="osadzony">ten tekst jest stylowany z elementu style w sekcji head</span>.</p>
+
+    <p style="color: #c00; font-weight: bold;">Styl inline: ten tekst ma atrybut style.</p>
+
+    <p>Pozostałe zadania są dostępne w menu: rozmiary i formatowanie tekstu, tło, selektory, box model, tabele oraz pseudoklasy i pseudoelementy.</p>
+  </main>
+
+  <footer>Laboratorium 3 – CSS3</footer>
+</body>
+</html>

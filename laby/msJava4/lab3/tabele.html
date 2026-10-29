@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8">
+  <title>Tabele – CSS3</title>
+  <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>Stylowanie tabel</h1>
+  </header>
+
+  <nav>
+    <ul>
+      <li><a href="index.html">Start</a></li>
+      <li>
+        <a href="#">CSS</a>
+        <ul>
+          <li><a href="tekst.html">Tekst i rozmiary</a></li>
+          <li><a href="tlo.html">Tło</a></li>
+          <li><a href="selektory.html">Selektory</a></li>
+        </ul>
+      </li>
+      <li>
+        <a href="#">Układ</a>
+        <ul>
+          <li><a href="box.html">Box model i pozycje</a></li>
+          <li><a href="tabele.html">Tabele</a></li>
+        </ul>
+      </li>
+      <li>
+        <a href="#">Efekty</a>
+        <ul>
+          <li><a href="pseudo.html">Pseudoklasy i pseudoelementy</a></li>
+        </ul>
+      </li>
+    </ul>
+  </nav>
+
+  <main>
+    <h2>8. Stylowanie tabel</h2>
+
+    <table>
+      <caption>Przykładowa tabela</caption>
+      <colgroup>
+        <col>
+        <col>
+        <col class="col-cena">
+      </colgroup>
+      <thead>
+        <tr>
+          <th scope="col">Produkt</th>
+          <th scope="col">Ilość</th>
+          <th scope="col">Cena</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Długopis</td>
+          <td>3</td>
+          <td>12 zł</td>
+        </tr>
+        <tr>
+          <td>Zeszyt</td>
+          <td>2</td>
+          <td>18 zł</td>
+        </tr>
+        <tr>
+          <td>Ołówek</td>
+          <td>5</td>
+          <td>10 zł</td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr>
+          <td>Razem</td>
+          <td>10</td>
+          <td>40 zł</td>
+        </tr>
+      </tfoot>
+    </table>
+
+    <p>Tabela ma obramowania, nagłówek, naprzemienne kolory wierszy, efekt hover oraz podsumowanie w tfoot.</p>
+  </main>
+
+  <footer>Laboratorium 3 – CSS3</footer>
+</body>
+</html>

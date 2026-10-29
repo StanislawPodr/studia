@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8">
+  <title>Box model i pozycje – CSS3</title>
+  <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>Box model i pozycjonowanie</h1>
+  </header>
+
+  <nav>
+    <ul>
+      <li><a href="index.html">Start</a></li>
+      <li>
+        <a href="#">CSS</a>
+        <ul>
+          <li><a href="tekst.html">Tekst i rozmiary</a></li>
+          <li><a href="tlo.html">Tło</a></li>
+          <li><a href="selektory.html">Selektory</a></li>
+        </ul>
+      </li>
+      <li>
+        <a href="#">Układ</a>
+        <ul>
+          <li><a href="box.html">Box model i pozycje</a></li>
+          <li><a href="tabele.html">Tabele</a></li>
+        </ul>
+      </li>
+      <li>
+        <a href="#">Efekty</a>
+        <ul>
+          <li><a href="pseudo.html">Pseudoklasy i pseudoelementy</a></li>
+        </ul>
+      </li>
+    </ul>
+  </nav>
+
+  <main>
+    <h2>5. Box model i pozycjonowanie</h2>
+
+    <h3>margin, padding, width, height, border</h3>
+    <div class="model">width: 320px, height: 80px, margin: 16px, padding: 16px, border: 6px</div>
+
+    <h3>position: static, relative, absolute</h3>
+    <div class="pozycje">
+      <div class="statyczny">static</div>
+      <div class="wzgledny">relative</div>
+      <div class="absolutny">absolute</div>
+    </div>
+
+    <h3>float</h3>
+    <div class="plywajacy">float: left</div>
+    <p>Ten tekst opływa element, który ma ustawioną właściwość float. Ten tekst opływa element, który ma ustawioną właściwość float. Ten tekst opływa element, który ma ustawioną właściwość float.</p>
+    <div class="clear"></div>
+
+    <h3>position: fixed</h3>
+    <p>Element fixed jest przyklejony do prawego dolnego rogu okna.</p>
+    <div class="staly">fixed</div>
+
+    <h2>7. border-width, border-style i border-color</h2>
+    <div class="ramka">border-width: 6px; border-style: double; border-color: #c00;</div>
+  </main>
+
+  <footer>Laboratorium 3 – CSS3</footer>
+</body>
+</html>

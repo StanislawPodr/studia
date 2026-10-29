@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8">
+  <title>Pseudoklasy i pseudoelementy – CSS3</title>
+  <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>Pseudoklasy i pseudoelementy</h1>
+  </header>
+
+  <nav>
+    <ul>
+      <li><a href="index.html">Start</a></li>
+      <li>
+        <a href="#">CSS</a>
+        <ul>
+          <li><a href="tekst.html">Tekst i rozmiary</a></li>
+          <li><a href="tlo.html">Tło</a></li>
+          <li><a href="selektory.html">Selektory</a></li>
+        </ul>
+      </li>
+      <li>
+        <a href="#">Układ</a>
+        <ul>
+          <li><a href="box.html">Box model i pozycje</a></li>
+          <li><a href="tabele.html">Tabele</a></li>
+        </ul>
+      </li>
+      <li>
+        <a href="#">Efekty</a>
+        <ul>
+          <li><a href="pseudo.html">Pseudoklasy i pseudoelementy</a></li>
+        </ul>
+      </li>
+    </ul>
+  </nav>
+
+  <main>
+    <h2>9. Pseudoklasy i pseudoelementy</h2>
+
+    <h3>Pseudoklasy</h3>
+
+    <p><label>Pole tekstowe – kliknij, aby zobaczyć :focus: <input type="text"></label></p>
+
+    <p><a href="#cel">Kliknij, aby zobaczyć :target</a></p>
+    <div id="cel">Ten blok zmienia obramowanie i tło, gdy jest celem linku.</div>
+
+    <h3>Pseudoelementy</h3>
+
+    <p class="akapit">Ten akapit jest wystarczająco długi, aby mieć kilka linii tekstu. Pierwsza linia jest wyróżniona przez pseudoelement ::first-line, a pozostałe linie zachowują zwykły wygląd.</p>
+
+    <p>Przed nagłówkami h2 pojawia się znak dodany przez pseudoelement ::before.</p>
+  </main>
+
+  <footer>Laboratorium 3 – CSS3</footer>
+</body>
+</html>

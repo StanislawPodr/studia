@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8">
+  <title>Selektory – CSS3</title>
+  <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>Selektory CSS</h1>
+  </header>
+
+  <nav>
+    <ul>
+      <li><a href="index.html">Start</a></li>
+      <li>
+        <a href="#">CSS</a>
+        <ul>
+          <li><a href="tekst.html">Tekst i rozmiary</a></li>
+          <li><a href="tlo.html">Tło</a></li>
+          <li><a href="selektory.html">Selektory</a></li>
+        </ul>
+      </li>
+      <li>
+        <a href="#">Układ</a>
+        <ul>
+          <li><a href="box.html">Box model i pozycje</a></li>
+          <li><a href="tabele.html">Tabele</a></li>
+        </ul>
+      </li>
+      <li>
+        <a href="#">Efekty</a>
+        <ul>
+          <li><a href="pseudo.html">Pseudoklasy i pseudoelementy</a></li>
+        </ul>
+      </li>
+    </ul>
+  </nav>
+
+  <main>
+    <h2>4. Definiowanie selektorów</h2>
+
+    <p id="identyfikator">Selektor identyfikatora: #identyfikator.</p>
+
+    <p class="klasa">Selektor klasy: .klasa.</p>
+
+    <section class="sekcja">
+      <h3>Zagnieżdżenie i selektor dziecka</h3>
+      <p>Bezpośrednie dziecko section: .sekcja &gt; p.</p>
+      <div>
+        <p>Dalszy potomek section: .sekcja p.</p>
+      </div>
+    </section>
+
+    <p>Oba akapity w sekcji są podkreślone przez .sekcja p, a tylko bezpośrednie dziecko jest zielone dzięki .sekcja &gt; p.</p>
+  </main>
+
+  <footer>Laboratorium 3 – CSS3</footer>
+</body>
+</html>
