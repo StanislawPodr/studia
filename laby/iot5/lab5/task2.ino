@@ -13,7 +13,8 @@
 #define ENCODER1 A2
 #define ENCODER2 A3
 #define MAX_ENCODER_VALUE 255
-#define ENCODER_STEP 15
+#define ENCODER_STEP_POWER 15
+#define ENCODER_STEP_MENU 86
 #define DEBOUNCING_PERIOD_ENCODER 100
 
 // Stałe guzików
@@ -23,88 +24,128 @@
 
 // Stałe menu
 #define NO_MENU_OPTIONS 3
-typedef enum MenuOptions {
+typedef enum MenuOptions_e {
   MENU_OPTION_RED,
   MENU_OPTION_GREEN,
-  MENU_OPTION_BLUE
-} MenuOptions;
+  MENU_OPTION_BLUE,
+  MENU_OPTION_CHANGE_RED,
+  MENU_OPTION_CHANGE_GREEN,
+  MENU_OPTION_CHANGE_BLUE
+} MenuOptions_e;
 
 // Zmienne dla guzików
-int previous_reading_green = HIGH;
-int previous_reading_red = HIGH;
-int debounced_button_state_green = HIGH;
-int debounced_button_state_red = HIGH;
-unsigned long last_change_time_green = 0UL;
-unsigned long last_change_time_red = 0UL;
+typedef struct ButtonState_s {
+  int previousReading;
+  int debouncedButtonState;
+  int buttonPin;
+  unsigned long lastChangeTime;
+} ButtonState_s;
+
+ButtonState_s redButtonState = {.previousReading = HIGH,
+                                .debouncedButtonState = HIGH,
+                                .buttonPin = RED_BUTTON,
+                                .lastChangeTime = 0UL};
+
+ButtonState_s greenButtonState = {.previousReading = HIGH,
+                                  .debouncedButtonState = HIGH,
+                                  .buttonPin = GREEN_BUTTON,
+                                  .lastChangeTime = 0UL};
 
 // Zmienne enkodera
+struct EncoderValues_s {
+  int menu;
+  int redDiodePow;
+  int greenDiodePow;
+  int blueDiodePow;
+} encoderValues = {0};
+
 volatile int encoder1 = HIGH;
 volatile int encoder2 = HIGH;
 volatile unsigned long encoderTimestamp = 0UL;
 int encoderValue = 0;
 int lastEn1 = LOW;
+int encoderStep = ENCODER_STEP_MENU;
 unsigned long lastChangeTimestamp = 0UL;
 
 // Obecna opcja w menu
-MenuOptions currentMenuOption = MENU_OPTION_RED;
+MenuOptions_e currentMenuOption = MENU_OPTION_RED;
 
 // Zmienna ekranu
 LiquidCrystal_I2C lcd(0x27, 16, 2);
 
-void handleButtons() {
-  bool is_green_pressed =
-      isButtonPressed(&previous_reading_green, &debounced_button_state_green,
-                      &last_change_time_green, GREEN_BUTTON);
-  bool is_red_pressed =
-      isButtonPressed(&previous_reading_red, &debounced_button_state_red,
-                      &last_change_time_red, RED_BUTTON);
+bool isMenuChange(MenuOptions_e option) {
+  return option == MENU_OPTION_CHANGE_RED ||
+         option == MENU_OPTION_CHANGE_GREEN ||
+         option == MENU_OPTION_CHANGE_BLUE;
+}
 
-  if (is_red_pressed || is_green_pressed) {
-    uint8_t colorPin = 0;
+bool isMenuSelect(MenuOptions_e option) {
+  return option == MENU_OPTION_RED || option == MENU_OPTION_GREEN ||
+         option == MENU_OPTION_BLUE;
+}
+
+void handleButtons(void) {
+
+  if (isMenuSelect(currentMenuOption) && isButtonPressed(&greenButtonState)) {
+    encoderValues.menu = encoderValue;
     switch (currentMenuOption) {
     case MENU_OPTION_RED:
-      colorPin = LED_RED;
+      currentMenuOption = MENU_OPTION_CHANGE_RED;
+      encoderValue = encoderValues.redDiodePow;
       break;
     case MENU_OPTION_GREEN:
-      colorPin = LED_GREEN;
+      currentMenuOption = MENU_OPTION_CHANGE_GREEN;
+      encoderValue = encoderValues.greenDiodePow;
       break;
     case MENU_OPTION_BLUE:
-      colorPin = LED_BLUE;
+      currentMenuOption = MENU_OPTION_CHANGE_BLUE;
+      encoderValue = encoderValues.blueDiodePow;
       break;
     }
-    digitalWrite(colorPin, is_red_pressed ? HIGH : LOW);
+    encoderStep = ENCODER_STEP_POWER;
+    printCurrentOptions();
+  }
+
+  if (isMenuChange(currentMenuOption) && isButtonPressed(&redButtonState)) {
+    switch (currentMenuOption) {
+    case MENU_OPTION_CHANGE_RED:
+      currentMenuOption = MENU_OPTION_RED;
+      encoderValues.redDiodePow = encoderValue;
+      break;
+    case MENU_OPTION_CHANGE_GREEN:
+      currentMenuOption = MENU_OPTION_GREEN;
+      encoderValues.greenDiodePow = encoderValue;
+      break;
+    case MENU_OPTION_CHANGE_BLUE:
+      currentMenuOption = MENU_OPTION_BLUE;
+      encoderValues.blueDiodePow = encoderValue;
+      break;
+    }
+    encoderValue = encoderValues.menu;
+    encoderStep = ENCODER_STEP_MENU;
+    printCurrentOptions();
   }
 }
 
-bool isButtonPressed(int *previous_reading_ptr, int *debounced_button_state_ptr,
-                     unsigned long *last_change_time_ptr, int button) {
-
-  int previous_reading = *previous_reading_ptr;
-  int debounced_button_state = *debounced_button_state_ptr;
-  unsigned long last_change_time = *last_change_time_ptr;
-
+bool isButtonPressed(ButtonState_s *buttonState) {
   bool isPressed = false;
 
-  int current_reading = digitalRead(button);
+  int currentReading = digitalRead(buttonState->buttonPin);
 
-  if (previous_reading != current_reading) {
-    last_change_time = millis();
+  if (buttonState->previousReading != currentReading) {
+    buttonState->lastChangeTime = millis();
   }
 
-  if (millis() - last_change_time > DEBOUNCING_PERIOD_BUTTONS) {
-    if (current_reading != debounced_button_state) {
-      if (debounced_button_state == HIGH && current_reading == LOW) {
+  if (millis() - buttonState->lastChangeTime > DEBOUNCING_PERIOD_BUTTONS) {
+    if (currentReading != buttonState->debouncedButtonState) {
+      if (buttonState->debouncedButtonState == HIGH && currentReading == LOW) {
         isPressed = true;
       }
-      debounced_button_state = current_reading;
+      buttonState->debouncedButtonState = currentReading;
     }
   }
 
-  previous_reading = current_reading;
-
-  *previous_reading_ptr = previous_reading;
-  *debounced_button_state_ptr = debounced_button_state;
-  *last_change_time_ptr = last_change_time;
+  buttonState->previousReading = currentReading;
 
   return isPressed;
 }
@@ -116,7 +157,7 @@ ISR(PCINT1_vect) {
   encoderTimestamp = millis();
 }
 
-void handleEncoder() {
+void handleEncoder(void) {
 
   int en1;
   int en2;
@@ -131,11 +172,15 @@ void handleEncoder() {
   if (en1 == LOW &&
       timestamp > lastChangeTimestamp + DEBOUNCING_PERIOD_ENCODER) {
     if (en2 == HIGH) {
-      if (encoderValue < MAX_ENCODER_VALUE)
-        encoderValue += ENCODER_STEP;
+      if (encoderValue < MAX_ENCODER_VALUE) {
+        encoderValue += encoderStep;
+        encoderValue = min(encoderValue, MAX_ENCODER_VALUE);
+      }
     } else {
-      if (encoderValue > 0)
-        encoderValue -= ENCODER_STEP;
+      if (encoderValue > 0) {
+        encoderValue -= encoderStep;
+        encoderValue = max(encoderValue, 0);
+      }
     }
     lastChangeTimestamp = timestamp;
 
@@ -145,62 +190,95 @@ void handleEncoder() {
 }
 
 void handleEncoderChange(int encoderValue) {
-  currentMenuOption = encoderValue * NO_MENU_OPTIONS / (MAX_ENCODER_VALUE + 1);
-  printCurrentOptions(currentMenuOption);
-}
-
-void printCurrentOptions(MenuOptions menuOption) {
-  // Napisanie "ON          OFF" w drugim wierszu.
-  char fstLine[SCREEN_WIDTH + 1] = {0};
-  uint8_t spaceCnt = SCREEN_WIDTH - strlen("ON") - strlen("OFF");
-  snprintf(fstLine, SCREEN_WIDTH + 1, "ON%*sOFF", spaceCnt, "");
-
-  lcd.setCursor(0, 1);
-  lcd.print(fstLine);
-
-  // Napisanie nazwy koloru w pierwszym wierszu.
-  char *colorName = NULL;
-  switch (menuOption) {
+  switch (currentMenuOption) {
   case MENU_OPTION_RED:
-    colorName = "RED";
-    break;
   case MENU_OPTION_GREEN:
-    colorName = "GREEN";
-    break;
   case MENU_OPTION_BLUE:
-    colorName = "BLUE";
+    // Obliczenie aktualnego menu
+    currentMenuOption = (MenuOptions_e)(encoderValue * NO_MENU_OPTIONS /
+                                        (MAX_ENCODER_VALUE + 1));
+    break;
+  case MENU_OPTION_CHANGE_RED:
+    analogWrite(LED_RED, encoderValue);
+    break;
+  case MENU_OPTION_CHANGE_GREEN:
+    analogWrite(LED_GREEN, encoderValue);
+    break;
+  case MENU_OPTION_CHANGE_BLUE:
+    analogWrite(LED_BLUE, encoderValue);
     break;
   }
-  char secLine[SCREEN_WIDTH + 1] = {0};
-  snprintf(secLine, SCREEN_WIDTH + 1, "%*s", SCREEN_WIDTH, colorName);
-
-  lcd.setCursor(0, 0);
-  lcd.print(secLine);
+  printCurrentOptions();
 }
 
-void initButtons() {
+void printCurrentOptions(void) {
+
+  if (isMenuSelect(currentMenuOption)) {
+    // Napisanie "          EDIT>>" w pierwszym wierszu.
+    char fstLine[SCREEN_WIDTH + 1] = {0};
+    snprintf(fstLine, SCREEN_WIDTH + 1, "%*s", SCREEN_WIDTH, "EDIT>>");
+
+    lcd.setCursor(0, 0);
+    lcd.print(fstLine);
+
+    // Napisanie nazwy koloru w drugim wierszu.
+    const char *colorName = NULL;
+    switch (currentMenuOption) {
+    case MENU_OPTION_RED:
+      colorName = "RED";
+      break;
+    case MENU_OPTION_GREEN:
+      colorName = "GREEN";
+      break;
+    case MENU_OPTION_BLUE:
+      colorName = "BLUE";
+      break;
+    }
+    char secLine[SCREEN_WIDTH + 1] = {0};
+    snprintf(secLine, SCREEN_WIDTH + 1, "%*s", -SCREEN_WIDTH, colorName);
+
+    lcd.setCursor(0, 1);
+    lcd.print(secLine);
+
+  } else if (isMenuChange(currentMenuOption)) {
+    // Napisanie wartości enkodera w pierwszym wierszu
+    char fstLine[SCREEN_WIDTH + 1] = {0};
+    snprintf(fstLine, SCREEN_WIDTH + 1, "%*d", SCREEN_WIDTH, encoderValue);
+
+    lcd.setCursor(0, 0);
+    lcd.print(fstLine);
+    // Napisanie "<<RET            " w drugim wierszu
+    char secLine[SCREEN_WIDTH + 1] = {0};
+    snprintf(secLine, SCREEN_WIDTH + 1, "%*s", -SCREEN_WIDTH, "<<RET");
+
+    lcd.setCursor(0, 1);
+    lcd.print(secLine);
+  }
+}
+
+void initButtons(void) {
   pinMode(RED_BUTTON, INPUT_PULLUP);
   pinMode(GREEN_BUTTON, INPUT_PULLUP);
 }
 
-void initLeds() {
+void initLeds(void) {
   pinMode(LED_RED, OUTPUT);
   pinMode(LED_GREEN, OUTPUT);
   pinMode(LED_BLUE, OUTPUT);
 }
 
-void initScreen() {
+void initScreen(void) {
   lcd.init();
   lcd.backlight();
 }
 
-void setup() {
+void setup(void) {
   initButtons();
   initLeds();
   initScreen();
 
   // inicjalizacja ekranu
-  printCurrentOptions(currentMenuOption);
+  printCurrentOptions();
   lastChangeTimestamp = millis();
 
   // Włączenie obsługi przerwań enkodera
@@ -210,7 +288,7 @@ void setup() {
   PCMSK1 |= (1 << PCINT10);
 }
 
-void loop() {
+void loop(void) {
   handleEncoder();
   handleButtons();
 }
