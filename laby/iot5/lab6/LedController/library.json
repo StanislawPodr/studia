@@ -1,0 +1,14 @@
+{
+  "name": "LedController",
+  "version": "1.0.0",
+  "description": "Prosta biblioteka do sterowania diodami RGB.",
+  "keywords": ["rgb", "led", "display", "pwm"],
+  "authors": [
+    {
+      "name": "Stanislaw",
+      "email": "mojmejl@mejl.com"
+    }
+  ],
+  "frameworks": "arduino",
+  "platforms": "*"
+}
