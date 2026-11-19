@@ -1,0 +1,15 @@
+ canvas {
+    border: 1px solid black
+}
+
+.even {
+            background-color: pink;
+}
+
+.odd {
+    background-color: turquoise;
+}
+
+th {
+    background-color: yellow;
+}
